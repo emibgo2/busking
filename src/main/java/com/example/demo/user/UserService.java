@@ -4,7 +4,6 @@ package com.example.demo.user;
 import com.example.demo.RoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +15,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
@@ -41,7 +39,7 @@ public class UserService {
         int checkResult = checkMemberId(user);
         if (checkResult == 1) {
             String rawPassword = user.getPassword(); // 원문
-            String encPassword = encoder.encode(rawPassword);
+            String encPassword =(rawPassword);
             user.setPassword(encPassword);
             if (roleType == 1) user.setRole(RoleType.USER);
             else if (roleType == 2) user.setRole(RoleType.ADMIN);
