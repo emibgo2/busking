@@ -1,5 +1,6 @@
 
 server:
+  port: ${PORT:5000}
   profiles:
     active: default
   servlet:
@@ -8,7 +9,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-  port: 80
+
 
 spring:
   thymeleaf:
