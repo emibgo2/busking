@@ -17,10 +17,9 @@ import javax.persistence.*;
 public class User {
 
 
-    public User(String username, String password, RoleType role, String profileImgURL) {
+    public User(String username, String password, String profileImgURL) {
         this.username = username;
         this.password = password;
-        this.role = role;
         this.profileImgURL = profileImgURL;
     }
 
