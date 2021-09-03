@@ -55,7 +55,7 @@ public class UserApiController {
             return new User();
         });
         if (adminCheck.getUsername() == null) {
-            User admin = new User("아이유","1", RoleType.ADMIN,"https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
+            User admin = new User("아이유","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
             userService.joinMember(admin, 2);
             log.info("관리자 아이디 생성");
         } else log.info("이미 관리자 아이디가 있습니다.");
