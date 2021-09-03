@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -53,20 +51,14 @@ public class UserApiController {
     @PostConstruct
     public void init() {
 
-        List<User> userList = new ArrayList<>();
-        userList.add(new User("iu","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG"));
-        userList.add(new User("heize", "1", "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg"));
-
-        for (User user : userList) {
-            User adminCheck = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
-                return new User();
-            });
-            if (adminCheck.getUsername() == null) {
-                userService.joinMember(user, 2);
-                log.info("관리자 아이디 생성");
-            } else log.info("이미 관리자 아이디가 있습니다.");
-        }
-
+        User adminCheck = userRepository.findByUsername("admin").orElseGet(() -> {
+            return new User();
+        });
+        if (adminCheck.getUsername() == null) {
+            User admin = new User("아이유","1", RoleType.ADMIN,"https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
+            userService.joinMember(admin, 2);
+            log.info("관리자 아이디 생성");
+        } else log.info("이미 관리자 아이디가 있습니다.");
 
 
     }
