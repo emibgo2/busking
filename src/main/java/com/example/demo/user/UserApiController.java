@@ -72,7 +72,7 @@ public class UserApiController {
                 userService.joinMember(user, 1);
                 log.info("User 아이디 생성");
             }
-            else log.info("이미 관리자 아이디가 있습니다.");
+            else log.info("이미 아이디가 있습니다.");
         }
 
 
