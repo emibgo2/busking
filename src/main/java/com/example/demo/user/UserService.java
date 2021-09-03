@@ -2,18 +2,22 @@ package com.example.demo.user;
 
 
 import com.example.demo.RoleType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class UserService {
 
 
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
 
 
@@ -39,7 +43,7 @@ public class UserService {
         int checkResult = checkMemberId(user);
         if (checkResult == 1) {
             String rawPassword = user.getPassword(); // 원문
-            String encPassword =(rawPassword);
+            String encPassword = encoder.encode(rawPassword);
             user.setPassword(encPassword);
             if (roleType == 1) user.setRole(RoleType.USER);
             else if (roleType == 2) user.setRole(RoleType.ADMIN);
@@ -55,7 +59,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User userDetail(int id){
+    public User userFindById(int id){
         return userRepository.findById(id)
                 .orElseGet(() -> {
                     return new User();
@@ -63,6 +67,14 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
+    @Transactional(readOnly = true)
+    public User userFindByUsername(String username){
+        return userRepository.findByUsername(username)
+                .orElseGet(() -> {
+                    return new User();
+                });
+        // 해당 id값에 해당하는 Storage를 Return
+    }
 
 
 

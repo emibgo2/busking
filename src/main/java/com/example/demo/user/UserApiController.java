@@ -13,17 +13,16 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserApiController {
 
     private UserService userService;
     private UserRepository userRepository;
 
-    @GetMapping("/user/{userId}")
-    public ResponseDto<User> userInfo(@PathVariable int userId) {
+    @GetMapping("/{userName}")
+    public ResponseDto<User> userInfo(@PathVariable String userName) {
 
-        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userDetail(userId));
-
+        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByUsername(userName));
     }
 
 
@@ -51,7 +50,7 @@ public class UserApiController {
     @PostConstruct
     public void init() {
 
-        User adminCheck = userRepository.findByUsername("admin").orElseGet(() -> {
+        User adminCheck = userRepository.findByUsername("아이유").orElseGet(() -> {
             return new User();
         });
         if (adminCheck.getUsername() == null) {
@@ -59,7 +58,14 @@ public class UserApiController {
             userService.joinMember(admin, 2);
             log.info("관리자 아이디 생성");
         } else log.info("이미 관리자 아이디가 있습니다.");
-
+        User userCheck = userRepository.findByUsername("헤이즈").orElseGet(() -> {
+            return new User();
+        });
+        if (userCheck.getUsername() == null) {
+            User user = new User("헤이즈","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
+            userService.joinMember(user, 1);
+            log.info("관리자 아이디 생성");
+        } else log.info("이미 관리자 아이디가 있습니다.");
 
     }
 
