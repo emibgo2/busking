@@ -52,22 +52,6 @@ public class UserApiController {
     @PostConstruct
     public void init() {
 
-//        User adminCheck = userRepository.findByUsername("아이유").orElseGet(() -> {
-//            return new User();
-//        });
-//        if (adminCheck.getUsername() == null) {
-//            User admin = new User("아이유","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
-//            userService.joinMember(admin, 2);
-//            log.info("관리자 아이디 생성");
-//        } else log.info("이미 관리자 아이디가 있습니다.");
-//        User userCheck = userRepository.findByUsername("헤이즈").orElseGet(() -> {
-//            return new User();
-//        });
-//        if (userCheck.getUsername() == null) {
-//            User user = new User("헤이즈","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG");
-//            userService.joinMember(user, 1);
-//            log.info("관리자 아이디 생성");
-//        } else log.info("이미 관리자 아이디가 있습니다.");
 
         List<User> userList = new ArrayList<>();
         userList.add(new User("아이유","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG"));
