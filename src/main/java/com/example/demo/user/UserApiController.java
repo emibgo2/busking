@@ -27,6 +27,11 @@ public class UserApiController {
         return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByUsername(userName));
     }
 
+    @GetMapping("/all")
+    public ResponseDto<List> userInfo() {
+        return new ResponseDto<List>(HttpStatus.OK.value(), userRepository.findAll());
+    }
+
 
     @PostMapping("/id/check")
     public ResponseDto<Integer> idCheck(@RequestBody User user) {
