@@ -4,7 +4,7 @@ package com.example.demo.user;
 import com.example.demo.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
-        User user= userRepository.findByUsername(requestUser.getUsername()).orElseGet(() -> {
+        User user= userRepository.findByLoginID(requestUser.getLoginID()).orElseGet(() -> {
             return new User();
         });
         System.out.println(user);
@@ -50,11 +50,12 @@ public class UserService {
             try {
                 userRepository.save(user);
             }catch (Exception e){
-                return 3;
+                log.error("error! ");
+                return HttpStatus.INTERNAL_SERVER_ERROR.value();
             }
-            return 1;
+            return HttpStatus.CREATED.value();
             // User의 정보와 비밀번호를 해쉬한 값을 DB에 저장
-        }else return 2;
+        }else return HttpStatus.CONFLICT.value();
 
     }
 
@@ -68,8 +69,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User userFindByUsername(String username){
-        return userRepository.findByUsername(username)
+    public User userFindByLoginID(String username){
+        return userRepository.findByLoginID(username)
                 .orElseGet(() -> {
                     return new User();
                 });

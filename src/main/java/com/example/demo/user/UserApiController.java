@@ -2,7 +2,6 @@ package com.example.demo.user;
 
 
 import com.example.demo.ResponseDto;
-import com.example.demo.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,10 +20,11 @@ public class UserApiController {
     private UserService userService;
     private UserRepository userRepository;
 
-    @GetMapping("/{userName}")
-    public ResponseDto<User> userInfo(@PathVariable String userName) {
 
-        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByUsername(userName));
+    @GetMapping("/{loginId}")
+    public ResponseDto<User> userInfo(@PathVariable String loginId) {
+
+        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByLoginID(loginId));
     }
 
     @GetMapping("/all")
@@ -40,9 +40,10 @@ public class UserApiController {
         // 유저 회원가입 메소드
     }
 
-    @PostMapping("/joinProc")
-    public ResponseDto<Integer> save(@RequestBody User user) {
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), userService.joinMember(user, 1));
+    @PostMapping
+    public int save(@RequestBody User user) {
+        log.info("Sign Up User ={}",user);
+        return userService.joinMember(user, 1);
         // 유저 회원가입 메소드
     }
 
@@ -66,18 +67,18 @@ public class UserApiController {
 
 
         for (User user : userList) {
-            User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
+            User Check = userRepository.findByLoginID(user.getLoginID()).orElseGet(() -> {
                 return new User();
             });
-            if (user.getUsername()=="아이유" && Check.getUsername() == null ){
+            if (user.getLoginID()=="아이유" && Check.getLoginID() == null ){
                 userService.joinMember(user, 2);
                 log.info("ADMIN 아이디 생성");
             }
-            else if (Check.getUsername() == null) {
+            else if (Check.getLoginID() == null) {
                 userService.joinMember(user, 1);
                 log.info("User 아이디 생성");
             }
-            else log.info("이미 관리자 아이디가 있습니다.");
+            else log.info("이미 아이디가 있습니다.");
         }
 
 
