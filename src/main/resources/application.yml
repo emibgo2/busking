@@ -27,7 +27,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    Heroku Version
 #    url: jdbc:mysql://b98a5f2add016a:e7367b76@us-cdbr-east-04.cleardb.com/heroku_2ff823fe673f9cf?reconnect=true
-#    username: b98a5f2add016a
+#    loginID: b98a5f2add016a
 #    password: e7367b76
     url: jdbc:mysql://localhost:3306/busking?serverTimezone=Asia/Seoul
     username: emibgo

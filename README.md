@@ -1,0 +1,15 @@
+# Busking Project
+
+## Project Name: Busking
+###  Spring Frame Work
+ 
+서버 : Heroku  
+DB : My SQL
+Base URL : 
+
+
+## User API 명세서
+URL|METHOD|Description|Params
+:---:|:---:|:---:|:---:|
+|/user/{loginId}|GET|사용자 정보 조회| 
+|/user/|POST|DB에 사용자 정보를 등록합니다|loginId : ' ', password : ' '
