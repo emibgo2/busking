@@ -4,8 +4,8 @@
 ###  Spring Frame Work
  
 서버 : Heroku  
-DB : My SQL
-Base URL : 
+DB : My SQL  
+Base URL : https://busking-back.herokuapp.com/
 
 
 ## User API 명세서
