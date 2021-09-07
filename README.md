@@ -11,5 +11,5 @@ Base URL : https://busking-back.herokuapp.com/
 ## User API 명세서
 URL|METHOD|Description|Params
 :---:|:---:|:---:|:---:|
-|/user/{loginId}|GET|사용자 정보 조회| 
-|/user/|POST|DB에 사용자 정보를 등록합니다|loginId : ' ', password : ' '
+|/user/{loginID}|GET|사용자 정보 조회| 
+|/user/|POST|DB에 사용자 정보를 등록합니다|loginID : ' ', password : ' '
