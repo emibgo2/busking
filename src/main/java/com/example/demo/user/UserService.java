@@ -59,8 +59,24 @@ public class UserService {
 
     }
 
+    @Transactional
+    public int userDeleteById(Long id) {
+        userRepository.deleteById(id);
+        return HttpStatus.OK.value();
+    }
+
+    @Transactional
+    public int deleteTestDataAfter() {
+
+        for (Long i =  userRepository.count(); i > 4; i--) {
+            userRepository.deleteById(i);
+            log.info("{} 번 user가 삭제되었습니다.",i);
+        }
+        return HttpStatus.OK.value();
+    }
+
     @Transactional(readOnly = true)
-    public User userFindById(int id){
+    public User userFindById(Long id){
         return userRepository.findById(id)
                 .orElseGet(() -> {
                     return new User();

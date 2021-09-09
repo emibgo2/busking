@@ -23,12 +23,15 @@ public class UserApiController {
 
     @GetMapping("/{loginId}")
     public ResponseDto<User> userInfo(@PathVariable String loginId) {
-
         return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByLoginID(loginId));
     }
 
     @GetMapping("/all")
     public ResponseDto<List> userInfo() {
+        List<User> all = userRepository.findAll();
+        for (int i = 0; i < all.size(); i++) {
+            all.get(i).setId(i+1L);
+        }
         return new ResponseDto<List>(HttpStatus.OK.value(), userRepository.findAll());
     }
 
@@ -47,12 +50,23 @@ public class UserApiController {
         // 유저 회원가입 메소드
     }
 
+    @DeleteMapping("/all")
+    public int delete() {
+        return userService.deleteTestDataAfter();
+    }
+
     // Role Type 1: User, Role Type 2:ADMIN
     @PostMapping("/admin/joinProc")
     public ResponseDto<Integer> admin_Save(@RequestBody User user) {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), userService.joinMember(user, 2));
 
         // 관리자 회원가입 메소드
+    }
+
+    public int clearDB(int requestId) {
+        int result=0;
+        if (requestId>=1)  result= requestId*10+5-10;
+        return result;
     }
 
     @PostConstruct
@@ -64,6 +78,7 @@ public class UserApiController {
         userList.add(new User("헤이즈", "1", "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg"));
         userList.add(new User("한서희","1","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg"));
         userList.add(new User("default","1",""));
+
 
 
         for (User user : userList) {
