@@ -5,10 +5,11 @@ import com.example.demo.ResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -21,13 +22,13 @@ public class UserApiController {
     private UserRepository userRepository;
 
 
-    @GetMapping("/{loginId}")
-    public ResponseDto<User> userInfo(@PathVariable String loginId) {
-        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByLoginID(loginId));
+    @GetMapping("/{loginEmail}")
+    public ResponseDto<User> userInfo(@PathVariable String loginEmail) {
+        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByLoginEmail(loginEmail));
     }
 
     @GetMapping("/all")
-    public ResponseDto<List> userInfo() {
+    public ResponseDto<List> userAllInfo() {
         List<User> all = userRepository.findAll();
         for (int i = 0; i < all.size(); i++) {
             all.get(i).setId(i+1L);
@@ -44,7 +45,7 @@ public class UserApiController {
     }
 
     @PostMapping
-    public int save(@RequestBody User user) {
+    public int save(@Valid @RequestBody User user) {
         log.info("Sign Up User ={}",user);
         return userService.joinMember(user, 1);
         // 유저 회원가입 메소드
@@ -69,35 +70,7 @@ public class UserApiController {
         return result;
     }
 
-    @PostConstruct
-    public void init() {
 
-
-        List<User> userList = new ArrayList<>();
-        userList.add(new User("아이유","1","https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG"));
-        userList.add(new User("헤이즈", "1", "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg"));
-        userList.add(new User("한서희","1","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg"));
-        userList.add(new User("default","1",""));
-
-
-
-        for (User user : userList) {
-            User Check = userRepository.findByLoginID(user.getLoginID()).orElseGet(() -> {
-                return new User();
-            });
-            if (user.getLoginID()=="아이유" && Check.getLoginID() == null ){
-                userService.joinMember(user, 2);
-                log.info("ADMIN 아이디 생성");
-            }
-            else if (Check.getLoginID() == null) {
-                userService.joinMember(user, 1);
-                log.info("User 아이디 생성");
-            }
-            else log.info("이미 아이디가 있습니다.");
-        }
-
-
-    }
 
 
 //   기존 로그인 방식

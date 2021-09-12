@@ -6,7 +6,9 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // SELECT * FROM user WHERE loginID = 1?;
-    Optional<User> findByLoginID(String username);
+    Optional<User> findByLoginEmail(String username);
+
+    Optional<User> deleteUserByNickName(String nickName);
 
     // SELECT * FROM user WHERE loginID = 1?;
     // findBy = SELECT * FROM user <- Optinal findBy/Username -> WHERE loginID
