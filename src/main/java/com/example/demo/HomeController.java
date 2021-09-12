@@ -29,12 +29,13 @@ public class HomeController {
         List<Method> userController = new ArrayList<>();
         userController.add(new Method( "/user/{loginEmail}", "user/iu@naver.com","GET", "사용자 정보 조회", "ex) loginEmail = iu@naver.com"));
         userController.add(new Method("/user/all", "user/all","GET", "모든 사용자 정보 조회", "") );
-        userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "loginEmail : ' ', password : ' '"));
+        userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "loginEmail:' ', password:' ', nickName:' ', age:' ', gender:'MALE' or 'FEMALE', profileImgURL:' '"));
 
         // Music 부분 API URL
         List<Method> musicController = new ArrayList<>();
         musicController.add(new Method( "/music/{title}", "music/Jail","GET", "곡 정보 조회", "ex) title = Jail"));
         musicController.add(new Method( "/music/all", "music/all","GET", "모든 곡 정보 조회", ""));
+        musicController.add(new Method( "/music", "music/all","POST", "곡 추가", "title: ' ', singer: ' '"));
 
 
         // Controller MAP
