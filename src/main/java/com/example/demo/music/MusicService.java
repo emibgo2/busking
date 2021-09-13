@@ -1,18 +1,14 @@
 package com.example.demo.music;
 
-import com.example.demo.user.User;
-import com.example.demo.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +28,19 @@ public class MusicService {
     @Transactional(readOnly = true)
     public Object musicFindByTitleContain(String title){
         List<Music> music = musicRepository.findByTitleContains(title).orElseGet(() -> {
+            return new ArrayList<>();
+        });
+        if (music.isEmpty()) {
+            return 2; // null
+        }
+
+        return music; // 정상
+    }
+
+
+    @Transactional(readOnly = true)
+    public Object musicFindByTitleAndSingerContain(String keyword){
+        List<Music> music = musicRepository.findByTitleContainsOrSingerContains(keyword,keyword).orElseGet(() -> {
             return new ArrayList<>();
         });
         if (music.isEmpty()) {

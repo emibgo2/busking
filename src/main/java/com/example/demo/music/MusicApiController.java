@@ -24,15 +24,24 @@ public class MusicApiController {
     public MusicService musicService;
 
 
-    @GetMapping("/{title}/one")
+    @GetMapping("/title/{title}/one")
     public ResponseDto<Music> musicInfo(@PathVariable String title) {
         return new ResponseDto<Music>(HttpStatus.OK.value(), musicService.musicFindByTitle(title));
     }
-    @GetMapping("/{title}")
+    @GetMapping("/title/{title}")
     public ResponseDto<Object> musicTitleContain(@PathVariable String title) {
         Object response = musicService.musicFindByTitleContain(title);
         if (response.equals(2) ) {
             return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), title+"은 없습니다" );
+        }
+        return new ResponseDto<>(HttpStatus.OK.value(),response);
+    }
+
+    @GetMapping("/keyword/{keyword}")
+    public ResponseDto<Object> musicKeywordContain(@PathVariable String keyword) {
+        Object response = musicService.musicFindByTitleAndSingerContain(keyword);
+        if (response.equals(2) ) {
+            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), keyword+"은 없습니다" );
         }
         return new ResponseDto<>(HttpStatus.OK.value(),response);
     }

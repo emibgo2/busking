@@ -11,4 +11,6 @@ public interface MusicRepository extends JpaRepository<Music,Long> {
 
     Optional<List<Music>> findByTitleContains(String title);
 
+    Optional<List<Music>> findByTitleContainsOrSingerContains(String title, String title2);
+
 }
