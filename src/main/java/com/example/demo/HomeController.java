@@ -33,7 +33,8 @@ public class HomeController {
 
         // Music 부분 API URL
         List<Method> musicController = new ArrayList<>();
-        musicController.add(new Method( "/music/{title}", "music/Jail","GET", "곡 정보 조회", "ex) title = Jail"));
+        musicController.add(new Method( "/music/{title}", "music/Jail","GET", "title을 제목으로 포함한 모든 곡 정보 조회", "ex) title = Jail"));
+        musicController.add(new Method( "/music/{title}/one", "music/Jail/one","GET", "곡 정보 조회", "ex) title = Jail"));
         musicController.add(new Method( "/music/all", "music/all","GET", "모든 곡 정보 조회", ""));
         musicController.add(new Method( "/music", "music/all","POST", "곡 추가", "title: ' ', singer: ' '"));
 

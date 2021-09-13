@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 
+import com.example.demo.Gender;
 import com.example.demo.RoleType;
 import com.example.demo.TestData;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.PostConstruct;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +29,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
-
 
 
     @Transactional(readOnly = true)
@@ -73,13 +77,9 @@ public class UserService {
 
     @Transactional
     public int deleteTestDataAfter() {
-
-        for (Long i =  userRepository.count(); i > 4; i--) {
-            userRepository.deleteById(i);
-            log.info("{} 번 user가 삭제되었습니다.",i);
-        }
+        userRepository.deleteAll();
+        init();
         return HttpStatus.OK.value();
-
 
     }
 
@@ -111,5 +111,33 @@ public class UserService {
         Long result=0L;
         if (requestId>=1)  result= requestId*10L+5L-10L;
         return result;
+    }
+
+    @PostConstruct
+    public void init() {
+        /**
+         *  User Test Data
+         */
+        List<User> userList = new ArrayList<>();
+
+        userList.add(new User("iu@naver.com","1","아이유",29, Gender.FEMALE, RoleType.ADMIN,"https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("heize@naver.com", "1","헤이즈",31,Gender.FEMALE,RoleType.USER, "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("han@naver.com","1","한서희",27,Gender.FEMALE,RoleType.USER,"https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("default@naver.com","1","디폴트사용자",20,Gender.MALE,RoleType.USER,null, Timestamp.valueOf(LocalDateTime.now())));
+
+        for (User user : userList) {
+            User Check = userRepository.findByLoginEmail(user.getLoginEmail()).orElseGet(() -> {
+                return new User();
+            });
+            if (user.getLoginEmail()=="iu@naver.com" && Check.getLoginEmail() == null ){
+                joinMember(user, 2);
+                log.info("ADMIN 아이디 생성");
+            }
+            else if (Check.getLoginEmail() == null) {
+                joinMember(user, 1);
+                log.info("User 아이디 생성");
+            }
+            else log.info("이미 아이디가 있습니다.");
+        }
     }
 }

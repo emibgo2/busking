@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -21,11 +24,18 @@ public class MusicApiController {
     public MusicService musicService;
 
 
-    @GetMapping("/{title}")
-    public ResponseDto<Music> userInfo(@PathVariable String title) {
+    @GetMapping("/{title}/one")
+    public ResponseDto<Music> musicInfo(@PathVariable String title) {
         return new ResponseDto<Music>(HttpStatus.OK.value(), musicService.musicFindByTitle(title));
     }
-
+    @GetMapping("/{title}")
+    public ResponseDto<Object> musicTitleContain(@PathVariable String title) {
+        Object response = musicService.musicFindByTitleContain(title);
+        if (response.equals(2) ) {
+            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), title+"은 없습니다" );
+        }
+        return new ResponseDto<>(HttpStatus.OK.value(),response);
+    }
     @GetMapping("/all")
     public ResponseDto<List> musicAllInfo() {
         List<Music> all = musicRepository.findAll();
@@ -35,6 +45,11 @@ public class MusicApiController {
         return new ResponseDto<List>(HttpStatus.OK.value(), musicRepository.findAll());
     }
 
+    @DeleteMapping("/all")
+    public int delete() {
+        return musicService.deleteTestDataAfter();
+    }
+
     @PostMapping
     public ResponseDto<Integer> save(@Valid @RequestBody Music music) {
         log.info("Add for Music List ={}", music);
@@ -42,5 +57,6 @@ public class MusicApiController {
         return new ResponseDto<Integer>(HttpStatus.CREATED.value(),1);
         // 유저 회원가입 메소드
     }
+
 
 }

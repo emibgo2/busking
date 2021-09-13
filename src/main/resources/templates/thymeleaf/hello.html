@@ -126,21 +126,22 @@
   <br>
   <hr>
   <br>
-  <h1 style="text-align: center">Data Refresh</h1>
 
-  <div style="width: 300px; margin: auto">
-    <button id="refresh" style="background: rgba(255,255,255,0); border: none; outline: none; cursor: pointer; margin: auto " onclick="instance.test()" >
-  <img style="text-align: center  " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDVtr-mfkKvWFu5gySsGcOVrSr7xbeAO-F2Q&usqp=CAU" width="40%">
-  </button>
-  </div>
 
-  <br><br>
 
 <h1 style="text-align:center">명세서</h1>
 
 
 <div th:each="method :${methods}" >
-<h2 id="user-api-" style="text-align:center" th:text="${method.key+' API 명세서'}">User API 명세서</h2>
+  <br><br>
+  <div style="width: 300px; margin: auto">
+    <button id="refresh" style="background: rgba(255,255,255,0); border: none; outline: none; cursor: pointer; margin: auto " onclick="test()" th:onclick="test([[${method.key}]]);" >
+      <img style="text-align: center  " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDVtr-mfkKvWFu5gySsGcOVrSr7xbeAO-F2Q&usqp=CAU" width="40%">
+    </button>
+  </div>
+  <h2 style="text-align: center" th:text="${method.key+' Data Refresh'}">Data Refresh</h2>
+  <br>
+<h1 id="user-api-" style="text-align:center" th:text="${method.key+' API 명세서'}">User API 명세서</h1>
 <table class="type09" >
   <thead>
   <tr >
@@ -152,8 +153,8 @@
   </thead>
   <tbody>
   <tr  th:each="methodDetail :${method.value}" >
-    <td style="text-align:center" th:if="${methodDetail.method=='GET'}"><a th:if="${methodDetail.method =='GET'}" th:href="@{/{href}(href=${methodDetail.href})}" href="wwwww" th:text="${methodDetail.url}" target="_blank">/user/{loginID}</a></td>
-    <td style="text-align:center" th:if="${methodDetail.method!='GET'}"><a th:if="${methodDetail.method !='GET'}"href="https://www.postman.com/" th:text="${methodDetail.url}"  class="postman" target="_blank">/user/{loginID}</a></td>
+    <td style="text-align:center" th:if="${methodDetail.method=='GET'}"><a th:if="${methodDetail.method =='GET'}" th:href="@{/{href}(href=${methodDetail.href})}" href="wwwww" th:text="${methodDetail.url}" >/user/{loginID}</a></td>
+    <td style="text-align:center" th:if="${methodDetail.method!='GET'}"><a th:if="${methodDetail.method !='GET'}"href="https://www.postman.com/" th:text="${methodDetail.url}"  class="postman" >/user/{loginID}</a></td>
     <td style="text-align:center"  th:text="${methodDetail.method}">GET</td>
     <td style="text-align:center" th:text="${methodDetail.description}">사용자 정보 조회</td>
     <td style="text-align:center" th:text="${methodDetail.param}">ex) loginID = 아이유</td>
@@ -166,15 +167,15 @@
 </div>
 </body>
 <script>
-  let instance={
-    test:function(){
 
-      if (confirm("데이터 리셋을 하시겠습니까? (테스트 데이터 제외)")) {
-        index.userDelete()
+    function test(target){
+
+      if (confirm(target+"데이터 리셋을 하시겠습니까? (테스트 데이터 제외)")) {
+        index.Delete(target)
       } else {
 
       }
-    }
+
   }
 </script>
 </html>

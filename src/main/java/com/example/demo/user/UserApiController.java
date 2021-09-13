@@ -1,7 +1,9 @@
 package com.example.demo.user;
 
 
+import com.example.demo.Gender;
 import com.example.demo.ResponseDto;
+import com.example.demo.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +37,7 @@ public class UserApiController {
     public ResponseDto<List> userAllInfo() {
         List<User> all = userRepository.findAll();
         for (int i = 0; i < all.size(); i++) {
-            all.get(i).setId(i+1L);
+            all.get(i).setId(i + 1L);
         }
         return new ResponseDto<List>(HttpStatus.OK.value(), userRepository.findAll());
     }
@@ -46,7 +52,7 @@ public class UserApiController {
 
     @PostMapping
     public int save(@Valid @RequestBody User user) {
-        log.info("Sign Up User ={}",user);
+        log.info("Sign Up User ={}", user);
         return userService.joinMember(user, 1);
         // 유저 회원가입 메소드
     }
@@ -65,8 +71,8 @@ public class UserApiController {
     }
 
     public int clearDB(int requestId) {
-        int result=0;
-        if (requestId>=1)  result= requestId*10+5-10;
+        int result = 0;
+        if (requestId >= 1) result = requestId * 10 + 5 - 10;
         return result;
     }
 
