@@ -28,7 +28,6 @@ spring:
     url: jdbc:mysql://afmwvd5w7doyb839:ix7tehhe5yeyu40f@l0ebsc9jituxzmts.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/aryf0cpavymbwjjz
     username: afmwvd5w7doyb839
     password: ix7tehhe5yeyu40f
-
 #    url: jdbc:mysql://localhost:3306/busking?serverTimezone=Asia/Seoul
 #    username: emibgo
 #    password: wlgns2
@@ -37,6 +36,8 @@ spring:
     minIdle: 2
     initialSize: 5
     removeAbandoned: true
+    hikari:
+      maximum-pool-size: 9
 
 
 
