@@ -29,7 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
-
+    public List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
@@ -77,10 +77,11 @@ public class UserService {
 
     @Transactional
     public int deleteTestDataAfter() {
-        userRepository.deleteAll();
-        init();
+        for (Long i =  userRepository.count(); i > 4; i--) {
+            userRepository.deleteById(i);
+            log.info("{} 번 user가 삭제되었습니다.",i);
+        }
         return HttpStatus.OK.value();
-
     }
 
     @Transactional(readOnly = true)
@@ -101,24 +102,13 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
-    public Long clearDB(int requestId) {
-        int result=0;
-        if (requestId>=1)  result= requestId*10+5-10;
-        return new Long(result);
-    }
-
-    public Long clearDB(Long requestId) {
-        Long result=0L;
-        if (requestId>=1)  result= requestId*10L+5L-10L;
-        return result;
-    }
 
     @PostConstruct
     public void init() {
         /**
          *  User Test Data
          */
-        List<User> userList = new ArrayList<>();
+
 
         userList.add(new User("iu@naver.com","1","아이유",29, Gender.FEMALE, RoleType.ADMIN,"https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", Timestamp.valueOf(LocalDateTime.now())));
         userList.add(new User("heize@naver.com", "1","헤이즈",31,Gender.FEMALE,RoleType.USER, "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", Timestamp.valueOf(LocalDateTime.now())));

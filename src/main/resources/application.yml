@@ -25,12 +25,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://b98a5f2add016a:e7367b76@us-cdbr-east-04.cleardb.com/heroku_2ff823fe673f9cf?reconnect=true
-#    loginID: b98a5f2add016a
-#    password: e7367b76
-    url: jdbc:mysql://localhost:3306/busking?serverTimezone=Asia/Seoul
-    username: emibgo
-    password: wlgns2
+    url: jdbc:mysql://seczym1n7yr4unha:ves3pu1e3joha3vp@kfgk8u2ogtoylkq9.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ce61jybf2zm066aa
+    username: seczym1n7yr4unha
+    password: ves3pu1e3joha3vp
     maxActive: 10
     maxIdle: 5
     minIdle: 2

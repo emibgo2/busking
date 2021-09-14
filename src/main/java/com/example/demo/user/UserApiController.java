@@ -70,11 +70,7 @@ public class UserApiController {
         // 관리자 회원가입 메소드
     }
 
-    public int clearDB(int requestId) {
-        int result = 0;
-        if (requestId >= 1) result = requestId * 10 + 5 - 10;
-        return result;
-    }
+
 
 
 
