@@ -30,9 +30,9 @@ public class MusicService {
         List<Music> music = musicRepository.findByTitleContains(title).orElseGet(() -> {
             return new ArrayList<>();
         });
-        if (music.isEmpty()) {
-            return 2; // null
-        }
+//        if (music.isEmpty()) {
+//            return 2; // null
+//        }
 
         return music; // 정상
     }
@@ -43,9 +43,7 @@ public class MusicService {
         List<Music> music = musicRepository.findByTitleContainsOrSingerContains(keyword,keyword).orElseGet(() -> {
             return new ArrayList<>();
         });
-        if (music.isEmpty()) {
-            return 2; // null
-        }
+
 
         return music; // 정상
     }
@@ -79,6 +77,8 @@ public class MusicService {
         MusicList.add(new Music("Jail", "Kanye West", "https://w.namu.la/s/3d07a08af0b3be7afeee94f2972ebc72241d2cc9f6ce06f5dc2cbff51d19f9184c69172d0e776cc70a0de6de927e86a409eb43843a4040657d0c8dcc2a59cdb9f932608fdb59d5cc041c55e0a2ec340f9ce77a9f9f4933e2250b1eedec7fdbfc"));
         MusicList.add(new Music("Jail Pt.2", "Kanye West", "https://w.namu.la/s/3d07a08af0b3be7afeee94f2972ebc72241d2cc9f6ce06f5dc2cbff51d19f9184c69172d0e776cc70a0de6de927e86a409eb43843a4040657d0c8dcc2a59cdb9f932608fdb59d5cc041c55e0a2ec340f9ce77a9f9f4933e2250b1eedec7fdbfc"));
         MusicList.add(new Music("Circles", "Post Malone", "http://image.yes24.com/goods/79640397/XL"));
+        MusicList.add(new Music("TestTitle", "Jail", "https://w.namu.la/s/3d07a08af0b3be7afeee94f2972ebc72241d2cc9f6ce06f5dc2cbff51d19f9184c69172d0e776cc70a0de6de927e86a409eb43843a4040657d0c8dcc2a59cdb9f932608fdb59d5cc041c55e0a2ec340f9ce77a9f9f4933e2250b1eedec7fdbfc"));
+
 
         for (Music music : MusicList) {
             Music Check = musicRepository.findByTitle(music.getTitle()).orElseGet(() -> {
