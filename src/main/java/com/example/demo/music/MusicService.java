@@ -26,20 +26,17 @@ public class MusicService {
     }
 
     @Transactional(readOnly = true)
-    public Object musicFindByTitleContain(String title){
+    public List<Music> musicFindByTitleContain(String title){
         List<Music> music = musicRepository.findByTitleContains(title).orElseGet(() -> {
             return new ArrayList<>();
         });
-//        if (music.isEmpty()) {
-//            return 2; // null
-//        }
 
         return music; // 정상
     }
 
 
     @Transactional(readOnly = true)
-    public Object musicFindByTitleAndSingerContain(String keyword){
+    public List<Music> musicFindByTitleAndSingerContain(String keyword){
         List<Music> music = musicRepository.findByTitleContainsOrSingerContains(keyword,keyword).orElseGet(() -> {
             return new ArrayList<>();
         });

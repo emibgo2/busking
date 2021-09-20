@@ -30,20 +30,20 @@ public class MusicApiController {
     }
     @GetMapping("/title/{title}")
     public ResponseDto<Object> musicTitleContain(@PathVariable String title) {
-        Object response = musicService.musicFindByTitleContain(title);
-        if (response.equals(2) ) {
-            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), title+"은 없습니다" );
+        List<Music> music = musicService.musicFindByTitleContain(title);
+        if (music.isEmpty() ) {
+            throw  new IllegalArgumentException(title + "는 없습니다");
         }
-        return new ResponseDto<>(HttpStatus.OK.value(),response);
+        return new ResponseDto<>(HttpStatus.OK.value(),music);
     }
 
     @GetMapping("/keyword/{keyword}")
     public ResponseDto<Object> musicKeywordContain(@PathVariable String keyword) {
-        Object response = musicService.musicFindByTitleAndSingerContain(keyword);
-        if (response.equals(2) ) {
-            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), keyword+"은 없습니다" );
+        List<Music> music = musicService.musicFindByTitleAndSingerContain(keyword);
+        if (music.isEmpty() ) {
+            throw  new IllegalArgumentException(keyword + "는 없습니다");
         }
-        return new ResponseDto<>(HttpStatus.OK.value(),response);
+        return new ResponseDto<>(HttpStatus.OK.value(),music);
     }
     @GetMapping("/all")
     public ResponseDto<List> musicAllInfo() {
@@ -65,6 +65,13 @@ public class MusicApiController {
         musicService.save(music);
         return new ResponseDto<Integer>(HttpStatus.CREATED.value(),1);
         // 유저 회원가입 메소드
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    public ResponseDto illegalExHandler(IllegalArgumentException e) {
+        log.error("[exceptionHandler] ex", e);
+        return new ResponseDto(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
 
