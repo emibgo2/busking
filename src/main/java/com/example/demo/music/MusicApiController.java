@@ -32,7 +32,9 @@ public class MusicApiController {
     public ResponseDto<Object> musicTitleContain(@PathVariable String title) {
         List<Music> music = musicService.musicFindByTitleContain(title);
         if (music.isEmpty() ) {
-            throw  new IllegalArgumentException(title + "는 없습니다");
+//            throw  new IllegalArgumentException(title + "는 없습니다");
+            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),title + "는 없습니다");
+
         }
         return new ResponseDto<>(HttpStatus.OK.value(),music);
     }
@@ -41,7 +43,9 @@ public class MusicApiController {
     public ResponseDto<Object> musicKeywordContain(@PathVariable String keyword) {
         List<Music> music = musicService.musicFindByTitleAndSingerContain(keyword);
         if (music.isEmpty() ) {
-            throw  new IllegalArgumentException(keyword + "는 없습니다");
+//            throw  new IllegalArgumentException(keyword + "는 없습니다");
+            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),music);
+
         }
         return new ResponseDto<>(HttpStatus.OK.value(),music);
     }
@@ -67,11 +71,11 @@ public class MusicApiController {
         // 유저 회원가입 메소드
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ResponseDto illegalExHandler(IllegalArgumentException e) {
         log.error("[exceptionHandler] ex", e);
-        return new ResponseDto(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return new ResponseDto(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
 
