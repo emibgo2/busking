@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 
+
 import com.example.demo.Gender;
 import com.example.demo.RoleType;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import java.sql.Timestamp;
 @Entity
 public class User {
 
-    public User(String loginEmail, String password, String nickName, int age, Gender gender, RoleType role, String profileImgURL,Timestamp createDate) {
+    public User(String loginEmail, String password, String nickName, int age, Gender gender, RoleType role, String profileImgURL, Timestamp createDate) {
         this.loginEmail = loginEmail;
         this.password = password;
         this.nickName = nickName;
