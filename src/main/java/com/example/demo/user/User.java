@@ -23,8 +23,8 @@ import java.sql.Timestamp;
 @Entity
 public class User {
 
-    public User(String loginEmail, String password, String nickName, int age, Gender gender, RoleType role, String profileImgURL, Timestamp createDate) {
-        this.loginEmail = loginEmail;
+    public User(String Username, String password, String nickName, int age, Gender gender, RoleType role, String profileImgURL, Timestamp createDate) {
+        this.username = Username;
         this.password = password;
         this.nickName = nickName;
         this.age = age;
@@ -42,7 +42,7 @@ public class User {
     @Column(nullable = false, length = 30, unique = true)
     @Email(message = "이메일 형식에 맞지 않습니다.")
     @NotNull(message = "필수 값입니다.")
-    private String loginEmail; // ID
+    private String username; // ID
 
     @Column(nullable = false, length = 100, unique = true)
     @NotNull(message = "필수 값입니다.")

@@ -1,4 +1,4 @@
-package com.example.demo.config.auth;
+package com.example.demo.config.auth.principal;
 
 
 import com.example.demo.user.User;
@@ -19,7 +19,8 @@ public class PrincipalDetailService implements UserDetailsService {
     // username이 DB에 잇는지만 확인해서 return
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User principal = userRepository.findByLoginEmail(username)
+        System.out.println("username = " + username);
+        User principal = userRepository.findByUsername(username)
                 .orElseThrow(()->{
                     return new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.: " + username);});
         System.out.println("principal: "+principal);

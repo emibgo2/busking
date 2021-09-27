@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // SELECT * FROM user WHERE loginID = 1?;
-    Optional<User> findByLoginEmail(String username);
+    Optional<User> findByUsername(String username);
 
     Optional<User> deleteUserByNickName(String nickName);
 

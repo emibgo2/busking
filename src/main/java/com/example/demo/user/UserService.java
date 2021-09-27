@@ -3,22 +3,21 @@ package com.example.demo.user;
 
 import com.example.demo.Gender;
 import com.example.demo.RoleType;
-import com.example.demo.TestData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import sun.security.util.Password;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,12 +27,12 @@ public class UserService {
 
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     public List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
-        User user= userRepository.findByLoginEmail(requestUser.getLoginEmail()).orElseGet(() -> {
+        User user= userRepository.findByUsername(requestUser.getUsername()).orElseGet(() -> {
             return new User();
         });
         System.out.println(user);
@@ -94,8 +93,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User userFindByLoginEmail(String username){
-        return userRepository.findByLoginEmail(username)
+    public User userFindByUsername(String username){
+        return userRepository.findByUsername(username)
                 .orElseGet(() -> {
                     return new User();
                 });
@@ -116,14 +115,14 @@ public class UserService {
         userList.add(new User("default@naver.com","1","디폴트사용자",20,Gender.MALE,RoleType.USER,null, Timestamp.valueOf(LocalDateTime.now())));
 
         for (User user : userList) {
-            User Check = userRepository.findByLoginEmail(user.getLoginEmail()).orElseGet(() -> {
+            User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
                 return new User();
             });
-            if (user.getLoginEmail()=="iu@naver.com" && Check.getLoginEmail() == null ){
+            if (user.getUsername()=="iu@naver.com" && Check.getUsername() == null ){
                 joinMember(user, 2);
                 log.info("ADMIN 아이디 생성");
             }
-            else if (Check.getLoginEmail() == null) {
+            else if (Check.getUsername() == null) {
                 joinMember(user, 1);
                 log.info("User 아이디 생성");
             }

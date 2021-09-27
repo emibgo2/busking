@@ -1,4 +1,4 @@
-package com.example.demo.config.auth;
+package com.example.demo.config.auth.principal;
 
 import com.example.demo.user.User;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class PrincipalDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getLoginEmail();
+        return user.getUsername();
     }
 
     // 계정이 만료되지 않았는지를 리턴(true:만료 안됨)

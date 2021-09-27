@@ -6,6 +6,8 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import com.example.demo.user.UserService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Component
 @AllArgsConstructor
+@Getter @Setter
 public class TestData {
 
-    private UserRepository userRepository;
-    private UserService userService;
-    private MusicRepository musicRepository;
+    private String username;
+    private String password;
 
     @PostConstruct
     public void init() {

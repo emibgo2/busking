@@ -5,15 +5,17 @@
  
 서버 : Heroku  
 DB : My SQL  
-Base URL : https://busking-back.herokuapp.com/
-
+Base URL : https://busking-back.herokuapp.com/  
+로그인 방식: [JWT 토큰](https://webfirewood.tistory.com/115) 
 
 ## User API 명세서
 URL|METHOD|Description|Params
 :---:|:---:|:---:|:---:|
-|/user/{loginEmail}|GET|사용자 정보 조회|
+|/user/{username}|GET|사용자 정보 조회|
 |/user/all|GET|모든 사용자 정보 조회|
-|/user|POST|DB에 사용자 정보를 등록합니다|loginEmail:' ', password:' ', nickName:' ', age:' ', gender:'MALE' or 'FEMALE', profileImgURL:' '
+|/user|POST|DB에 사용자 정보를 등록합니다|username:' ', password:' ', nickName:' ', age:' ', gender:'MALE' or 'FEMALE', profileImgURL:' '
+|/user/login|POST|사용자 로그인 주소|username:' ', password:' '
+
 
 
 ## Music API 명세서

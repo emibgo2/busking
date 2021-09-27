@@ -1,36 +1,43 @@
 package com.example.demo.user;
 
 
-import com.example.demo.Gender;
 import com.example.demo.ResponseDto;
-import com.example.demo.RoleType;
+import com.example.demo.config.auth.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
 @RequestMapping("/user")
 public class UserApiController {
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder encoder;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    private UserService userService;
-    private UserRepository userRepository;
 
+    @PostMapping("/login")
+    public String login(@RequestBody Map<String, String> user) {
+        User member = userRepository.findByUsername(user.get("username")).orElseThrow(
+                () -> new IllegalArgumentException("없는 아이디 입니다."));
+        if (!encoder.matches(user.get("password"), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
+        }
+        return jwtTokenProvider.createToken(member.getUsername(), member.getRole());
+    }
 
-    @GetMapping("/{loginEmail}")
-    public ResponseDto<User> userInfo(@PathVariable String loginEmail) {
-        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByLoginEmail(loginEmail));
+    @GetMapping("/{username}")
+    public ResponseDto<User> userInfo(@PathVariable String username) {
+        return new ResponseDto<User>(HttpStatus.OK.value(), userService.userFindByUsername(username));
     }
 
     @GetMapping("/all")

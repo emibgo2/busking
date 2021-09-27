@@ -27,9 +27,10 @@ public class HomeController {
 
         // UserController 부분 API URL
         List<Method> userController = new ArrayList<>();
-        userController.add(new Method( "/user/{loginEmail}", "user/iu@naver.com","GET", "사용자 정보 조회", "ex) loginEmail = iu@naver.com"));
+        userController.add(new Method( "/user/{username}", "user/iu@naver.com","GET", "사용자 정보 조회", "ex) username = iu@naver.com"));
         userController.add(new Method("/user/all", "user/all","GET", "모든 사용자 정보 조회", "") );
-        userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "loginEmail:' ', password:' ', nickName:' ', age:' ', gender:'MALE' or 'FEMALE', profileImgURL:' '"));
+        userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "username:' ', password:' ', nickName:' ', age:' ', gender:'MALE' or 'FEMALE', profileImgURL:' '"));
+        userController.add(new Method("/user/login", " ", "POST", "사용자 로그인", "username:' ', password:' '"));
 
         // Music 부분 API URL
         List<Method> musicController = new ArrayList<>();
