@@ -1,6 +1,6 @@
 package com.example.demo.config.auth.jwt;
 
-import com.example.demo.RoleType;
+import com.example.demo.user.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Component

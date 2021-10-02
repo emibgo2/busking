@@ -1,17 +1,15 @@
 package com.example.demo.user;
 
 
-import com.example.demo.Gender;
-import com.example.demo.RoleType;
+import com.example.demo.user.userDetail.UserDetailDto;
+import com.example.demo.user.userDetail.UserDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import sun.security.util.Password;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
@@ -28,7 +26,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    public List<User> userList = new ArrayList<>();
+    private final UserDetailRepository userDetailRepository;
+    public  List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
@@ -44,11 +43,12 @@ public class UserService {
         else{             System.out.println("result: "+ 2);
             return 2;}
 
-
     }
 
     @Transactional
-    public int joinMember(@Validated User user, int roleType) {
+    public int joinMember(@Validated User user, int roleType ) {
+        if (roleType ==0) roleType=1; // default 값 1
+
         int checkResult = checkMemberId(user);
         if (checkResult == 1) {
             String rawPassword = user.getPassword(); // 원문
@@ -59,7 +59,7 @@ public class UserService {
             try {
                 userRepository.save(user);
             }catch (Exception e){
-                log.error("error! ");
+                log.error("error! ={} " ,e.getMessage());
                 return HttpStatus.INTERNAL_SERVER_ERROR.value();
             }
             return HttpStatus.CREATED.value();
@@ -67,6 +67,16 @@ public class UserService {
         }else return HttpStatus.CONFLICT.value();
 
     }
+
+    @Transactional
+    public void  detailSave(UserDetailDto userDetailDto) {
+        User user= userRepository.findById(userDetailDto.getUserId()).orElseThrow(() -> {
+            return new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        });
+        // user가 있는지 먼저 확인
+        userDetailRepository.mSave(userDetailDto.getUserId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroDuce());
+    }
+
 
     @Transactional
     public int userDeleteById(Long id) {
@@ -102,23 +112,20 @@ public class UserService {
     }
 
 
+
     @PostConstruct
     public void init() {
-        /**
-         *  User Test Data
-         */
-
-
-        userList.add(new User("iu@naver.com","1","아이유",29, Gender.FEMALE, RoleType.ADMIN,"https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", Timestamp.valueOf(LocalDateTime.now())));
-        userList.add(new User("heize@naver.com", "1","헤이즈",31,Gender.FEMALE,RoleType.USER, "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", Timestamp.valueOf(LocalDateTime.now())));
-        userList.add(new User("han@naver.com","1","한서희",27,Gender.FEMALE,RoleType.USER,"https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", Timestamp.valueOf(LocalDateTime.now())));
-        userList.add(new User("default@naver.com","1","디폴트사용자",20,Gender.MALE,RoleType.USER,null, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("iu@naver.com", "1", "아이유", 1993, Gender.FEMALE,Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("heize@naver.com", "1","헤이즈",1991,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("han@naver.com","1","한서희",1995,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("default@naver.com","1","디폴트사용자",2003,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
 
         for (User user : userList) {
             User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
                 return new User();
             });
             if (user.getUsername()=="iu@naver.com" && Check.getUsername() == null ){
+
                 joinMember(user, 2);
                 log.info("ADMIN 아이디 생성");
             }
@@ -129,4 +136,5 @@ public class UserService {
             else log.info("이미 아이디가 있습니다.");
         }
     }
+
 }

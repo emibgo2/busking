@@ -27,12 +27,14 @@ public class Music {
 
     @Column(nullable = false, length = 50)
     @NotBlank(message = "필수값 입니다.")
-    private String title;
+    private String title; // 노래 제목
 
     @Column(nullable = false, length = 50)
     @NotBlank(message = "필수값 입니다.")
-    private String singer;
+    private String singer; // 가수
 
+    @Lob
+    private String profileImgURL; // 앨범 커버
 
-    private String profileImgURL;
+    private String lyrics; // 가사
 }
