@@ -29,7 +29,7 @@ spring:
     username: vhgkvo8rzwitlu28
     password: ofjy524wp2dai209
 
-    #    url: jdbc:mysql://localhost:3306/busking?serverTimezone=Asia/Seoul
+#    url: jdbc:mysql://localhost:3306/busking?serverTimezone=Asia/Seoul
 #    username: emibgo
 #    password: wlgns2
     maxActive: 10
@@ -39,13 +39,16 @@ spring:
     removeAbandoned: true
     hikari:
       maximum-pool-size: 9
+  main:
+    allow-bean-definition-overriding: true
+
 
 
 
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false
