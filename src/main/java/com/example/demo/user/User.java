@@ -2,6 +2,7 @@ package com.example.demo.user;
 
 
 import com.example.demo.user.userDetail.UserDetail;
+import com.example.demo.user.userDetail.UserDetailDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +23,11 @@ import java.sql.Timestamp;
 public class User {
 
     // Test Data 생성을 위한 생성자
-    public User(String Username, String password, String nickName, int birthDay, Gender gender, Timestamp createDate) {
+    public User(String Username, String password, String nickname, int birthday, Gender gender, Timestamp createDate) {
         this.username = Username;
         this.password = password;
-        this.nickName = nickName;
-        this.birthDay = birthDay;
+        this.nickname = nickname;
+        this.birthday = birthday;
         this.gender = gender;
         this.createDate = createDate;
 
@@ -47,11 +48,11 @@ public class User {
 
     @Column(nullable = false, length = 20)
     @NotNull(message = "필수 값입니다.")
-    private String nickName;
+    private String nickname;
 
     @Column(nullable = false)
     @NotNull(message = "필수 값입니다.")
-    private int birthDay;
+    private int birthday;
 
     @Enumerated(EnumType.ORDINAL)
     @NotNull(message = "필수 값입니다.")
@@ -66,4 +67,14 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonIgnoreProperties({"user"})
     private UserDetail userDetail;
+
+    public UserDto userToDto(User user) {
+
+        if (user.getUserDetail()==null) {
+            return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
+                    new UserDetailDto(user.getNickname(), null, null));
+        }
+        return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
+                new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
+    }
 }

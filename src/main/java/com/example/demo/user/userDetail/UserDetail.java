@@ -1,6 +1,7 @@
 package com.example.demo.user.userDetail;
 
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,10 +16,10 @@ import javax.persistence.*;
 @Entity
 public class UserDetail {
     // Test Data 생성을 위한 생성자
-    public UserDetail(User user, String profileImgURL, String introDuce) {
+    public UserDetail(User user, String profileImgURL, String introduce) {
         this.user = user;
         this.profileImgURL = profileImgURL;
-        this.introDuce = introDuce;
+        this.introduce = introduce;
     }
 
     @Id
@@ -29,10 +30,11 @@ public class UserDetail {
 
     @OneToOne
     @JoinColumn(name ="userId")
+    @JsonIgnoreProperties("user")
     private User user;
 
     private String profileImgURL;
 
     @Lob
-    private String introDuce;
+    private String introduce;
 }

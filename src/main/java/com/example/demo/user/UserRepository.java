@@ -2,14 +2,16 @@ package com.example.demo.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // SELECT * FROM user WHERE loginID = 1?;
     Optional<User> findByUsername(String username);
+    Optional<User> deleteUserByUsername(String username);
 
-    Optional<User> deleteUserByNickName(String nickName);
-
+    Optional<User> findByNickname(String nickName);
+    Optional<List<User>> findByNicknameContains(String nickName);
     // SELECT * FROM user WHERE loginID = 1?;
     // findBy = SELECT * FROM user <- Optinal findBy/Username -> WHERE loginID
 //    Optional<User> findByUsername(String loginID);

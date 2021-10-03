@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +38,11 @@ public class UserApiController {
         }
         Map<String, String>jwtDto = new HashMap<>();
         jwtDto.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRole()));
-        jwtDto.put("username", member.getNickName());
+        jwtDto.put("username", member.getNickname());
         return  jwtDto;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/find/{username}")
     public ResponseDto<User> userInfo(@PathVariable String username) {
 //        List<UserDetail> userDetailList = new ArrayList<>();
 //        User user = userService.userFindByUsername(username);
@@ -52,13 +53,22 @@ public class UserApiController {
 //        userDetailList.add(new UserDetail(null, null, "안녕하세요"));
 //        int count =1;
 //        for (UserDetail userDetail : userDetailList) {
-//            System.out.println(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroDuce()));
-//            userService.detailSave(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroDuce()));
+//            System.out.println(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
+//            userService.detailSave(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
 //            count++;
 //        }
-
         return new ResponseDto<User>(HttpStatus.OK.value(),userService.userFindByUsername(username));
     }
+
+    @GetMapping("/{nickname}")
+    public ResponseDto<List<User>> userFindByNickName(@PathVariable String nickname) {
+        List<User> users = userRepository.findByNicknameContains(nickname).orElseGet(() -> {
+            return new ArrayList<>();
+        });
+        if (users.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), users);
+        return new ResponseDto<>(HttpStatus.OK.value(),users);
+    }
+
 
     @GetMapping("/all")
     public ResponseDto<List> userAllInfo() {
@@ -104,10 +114,15 @@ public class UserApiController {
     public ResponseDto<Integer> userDetailSave(@RequestBody UserDetailDto userDetailDto ) {
         System.out.println("userDetailDto = " + userDetailDto);
         userService.detailSave(userDetailDto);
-        return new ResponseDto<Integer>(HttpStatus.OK.value(),1/* 아직 미정 */);
+        return new ResponseDto<>(HttpStatus.OK.value(),1/* 아직 미정 */);
 
     }
 
+    public UserDto userToDto(User user) {
+
+        return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
+                new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
+    }
 
 
 //   기존 로그인 방식

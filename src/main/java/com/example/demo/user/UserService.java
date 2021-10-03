@@ -58,23 +58,25 @@ public class UserService {
             else if (roleType == 2) user.setRole(RoleType.ADMIN);
             try {
                 userRepository.save(user);
-            }catch (Exception e){
-                log.error("error! ={} " ,e.getMessage());
+            } catch (Exception e) {
+                log.error("error! ={} ", e.getMessage());
                 return HttpStatus.INTERNAL_SERVER_ERROR.value();
             }
             return HttpStatus.CREATED.value();
             // User의 정보와 비밀번호를 해쉬한 값을 DB에 저장
-        }else return HttpStatus.CONFLICT.value();
-
+        } else {
+            log.info("Sign Up! User = {}",user);
+            return HttpStatus.CONFLICT.value();
+        }
     }
 
     @Transactional
     public void  detailSave(UserDetailDto userDetailDto) {
-        User user= userRepository.findById(userDetailDto.getUserId()).orElseThrow(() -> {
+        User user= userRepository.findByNickname(userDetailDto.getNickname()).orElseThrow(() -> {
             return new IllegalArgumentException("유저를 찾을 수 없습니다.");
         });
         // user가 있는지 먼저 확인
-        userDetailRepository.mSave(userDetailDto.getUserId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroDuce());
+        userDetailRepository.mSave(user.getId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroduce());
     }
 
 
@@ -111,7 +113,14 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
-
+    @Transactional(readOnly = true)
+    public List<User> userContainsByNickname(String username){
+        return userRepository.findByNicknameContains(username)
+                .orElseGet(() -> {
+                    return new ArrayList<>();
+                });
+        // 해당 id값에 해당하는 Storage를 Return
+    }
 
     @PostConstruct
     public void init() {
