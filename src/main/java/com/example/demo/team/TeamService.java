@@ -5,6 +5,7 @@ import com.example.demo.user.User;
 import com.example.demo.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,14 @@ public class TeamService {
 
         return 200;
     }
-
+    @Transactional
+    public int deleteTestDataAfter() {
+        for (Long i =  teamRepository.count(); i > 4; i--) {
+            teamRepository.deleteById(i);
+            log.info("{} 번 user가 삭제되었습니다.",i);
+        }
+        return HttpStatus.OK.value();
+    }
     @Transactional
     public void save(TeamSaveForm team) {
         System.out.println("team.getLeaderName() = " + team.getLeaderName());

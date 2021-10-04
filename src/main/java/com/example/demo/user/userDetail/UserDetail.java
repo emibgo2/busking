@@ -1,20 +1,20 @@
 package com.example.demo.user.userDetail;
 
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 public class UserDetail {
+
     // Test Data 생성을 위한 생성자
     public UserDetail(User user, String profileImgURL, String introduce) {
         this.user = user;
@@ -24,13 +24,11 @@ public class UserDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
-
-
 
     @OneToOne
     @JoinColumn(name ="userId")
-    @JsonIgnoreProperties("user")
     private User user;
 
     private String profileImgURL;

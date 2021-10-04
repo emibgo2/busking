@@ -65,7 +65,7 @@ public class User {
     private Timestamp createDate;
 
     @OneToOne(mappedBy = "user")
-    @JsonIgnoreProperties({"user"})
+    @JsonIgnoreProperties({"user","userId"})
     private UserDetail userDetail;
 
     public UserDto userToDto(User user) {

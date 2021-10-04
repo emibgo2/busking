@@ -2,6 +2,7 @@ package com.example.demo.user;
 
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     private String nickname;

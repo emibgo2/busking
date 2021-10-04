@@ -1,10 +1,12 @@
 package com.example.demo.user;
 
 
+import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.example.demo.user.userDetail.UserDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final UserDetailRepository userDetailRepository;
-    public  List<User> userList = new ArrayList<>();
+    public   List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
     public int checkMemberId(User requestUser) {
@@ -73,10 +76,17 @@ public class UserService {
     @Transactional
     public void  detailSave(UserDetailDto userDetailDto) {
         User user= userRepository.findByNickname(userDetailDto.getNickname()).orElseThrow(() -> {
+            //User가 있는 지 먼저 확인
             return new IllegalArgumentException("유저를 찾을 수 없습니다.");
         });
-        // user가 있는지 먼저 확인
-        userDetailRepository.mSave(user.getId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroduce());
+        if (user.getUserDetail() == null) {
+            userDetailRepository.mSave(user.getId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroduce());
+        } else {
+            user.getUserDetail().setIntroduce(userDetailDto.getIntroduce());
+            user.getUserDetail().setProfileImgURL(userDetailDto.getProfileImgURL());
+        }
+
+
     }
 
 
@@ -106,6 +116,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User userFindByUsername(String username){
+        System.out.println("username = " + username);
         return userRepository.findByUsername(username)
                 .orElseGet(() -> {
                     return new User();
@@ -113,6 +124,17 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
+    @Transactional(readOnly = true)
+    public User userFindByNickname(String nickname){
+        User user = userRepository.findByNickname(nickname)
+                .orElseGet(() -> {
+                    return new User();
+                });
+        System.out.println("UserService.userFindByNickname");
+        System.out.println("user = " + user);
+        return user;
+        // 해당 id값에 해당하는 Storage를 Return
+    }
     @Transactional(readOnly = true)
     public List<User> userContainsByNickname(String username){
         return userRepository.findByNicknameContains(username)
@@ -122,8 +144,8 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
-    @PostConstruct
-    public void init() {
+    @Transactional
+    public void testUser() {
         userList.add(new User("iu@naver.com", "1", "아이유", 1993, Gender.FEMALE,Timestamp.valueOf(LocalDateTime.now())));
         userList.add(new User("heize@naver.com", "1","헤이즈",1991,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
         userList.add(new User("han@naver.com","1","한서희",1995,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
@@ -145,5 +167,38 @@ public class UserService {
             else log.info("이미 아이디가 있습니다.");
         }
     }
+    @PostConstruct
+    public void init() {
+        testUser();
+    }
 
+    @PreDestroy
+    public void Test() {
+
+    }
+
+}
+@Service
+@RequiredArgsConstructor
+class TestDataForUser implements InitializingBean {
+    private final UserRepository userRepository;
+    private final UserService userService;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("afterPropertiesSet");
+        List<User> userList = userRepository.findAll();
+        System.out.println(" findAll List");
+        List<UserDetail> userDetailList = new ArrayList<>();
+
+        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
+        userDetailList.add(new UserDetail( userList.get(0), "https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", "안녕하세요 아이유 입니다."));
+        userDetailList.add(new UserDetail( userList.get(1), "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", "안녕하세요 헤이즈 입니다."));
+        userDetailList.add(new UserDetail( userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
+        userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
+        int count =1;
+        for (UserDetail userDetail : userDetailList) {
+            userService.detailSave(new UserDetailDto(userList.get(count-1).getNickname(),userDetail.getProfileImgURL(),userDetail.getIntroduce()));
+            count++;
+        }
+    }
 }

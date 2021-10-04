@@ -36,14 +36,14 @@ public class UserApiController {
         if (!encoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        Map<String, String>jwtDto = new HashMap<>();
+        Map<String, String> jwtDto = new HashMap<>();
         jwtDto.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRole()));
         jwtDto.put("username", member.getNickname());
-        return  jwtDto;
+        return jwtDto;
     }
 
     @GetMapping("/find/{username}")
-    public ResponseDto<User> userInfo(@PathVariable String username) {
+    public ResponseDto<UserDto> userInfo(@PathVariable String username) {
 //        List<UserDetail> userDetailList = new ArrayList<>();
 //        User user = userService.userFindByUsername(username);
 //        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
@@ -57,16 +57,40 @@ public class UserApiController {
 //            userService.detailSave(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
 //            count++;
 //        }
-        return new ResponseDto<User>(HttpStatus.OK.value(),userService.userFindByUsername(username));
+
+        User user = userService.userFindByUsername(username);
+        System.out.println(3);
+        System.out.println("user = " + user);
+        UserDto userDto = userToDto(user);
+        if (user.getUsername() == null) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), new UserDto());
+        return new ResponseDto<>(HttpStatus.OK.value(), userDto);
     }
 
-    @GetMapping("/{nickname}")
-    public ResponseDto<List<User>> userFindByNickName(@PathVariable String nickname) {
+    @GetMapping("/{nickname}") // 유저 한명 특정
+    public ResponseDto<UserDto> userFindByNickName(@PathVariable String nickname) {
+        User user = userService.userFindByNickname(nickname);
+        if (user.getUsername() == null) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), new UserDto());
+        UserDto userDto = userToDto(user);
+        return new ResponseDto<>(HttpStatus.OK.value(), userDto);
+    }
+
+    @GetMapping("/like/{nickname}") // nickname에 포함된 글자를 토대로 검색
+    public ResponseDto<List> userContainByNickName(@PathVariable String nickname) {
+
         List<User> users = userRepository.findByNicknameContains(nickname).orElseGet(() -> {
             return new ArrayList<>();
         });
+
+
         if (users.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), users);
-        return new ResponseDto<>(HttpStatus.OK.value(),users);
+
+        List<UserDto> userDtos = new ArrayList<>();
+
+        for (User user : users) {
+            userDtos.add(userToDto(user));
+        }
+
+        return new ResponseDto<>(HttpStatus.OK.value(), userDtos);
     }
 
 
@@ -76,7 +100,16 @@ public class UserApiController {
         for (int i = 0; i < all.size(); i++) {
             all.get(i).setId(i + 1L);
         }
-        return new ResponseDto<List>(HttpStatus.OK.value(), userRepository.findAll());
+
+        if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), all);
+
+
+        List<UserDto> allUserDto = new ArrayList<>();
+        for (User user : all) {
+            allUserDto.add(userToDto(user));
+        }
+
+        return new ResponseDto<List>(HttpStatus.OK.value(), allUserDto);
     }
 
 
@@ -111,18 +144,22 @@ public class UserApiController {
     // UserDetail 부분
 
     @PutMapping("/detail")
-    public ResponseDto<Integer> userDetailSave(@RequestBody UserDetailDto userDetailDto ) {
-        System.out.println("userDetailDto = " + userDetailDto);
+    public ResponseDto<UserDetailDto> userDetailSave(@RequestBody UserDetailDto userDetailDto) {
         userService.detailSave(userDetailDto);
-        return new ResponseDto<>(HttpStatus.OK.value(),1/* 아직 미정 */);
+        return new ResponseDto<>(HttpStatus.OK.value(), userDetailDto);
 
     }
 
     public UserDto userToDto(User user) {
-
+        if (user.getUserDetail() != null) {
+            return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
+                    new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
+        }
         return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
-                new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
+                null);
     }
+}
+
 
 
 //   기존 로그인 방식
@@ -136,4 +173,4 @@ public class UserApiController {
 //        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 //    }
 
-}
+

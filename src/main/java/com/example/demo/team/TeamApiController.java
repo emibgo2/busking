@@ -68,6 +68,11 @@ public class TeamApiController {
         return new ResponseDto<Integer>(HttpStatus.OK.value(), teamService.onAir(teamName));
     }
 
+    @DeleteMapping("/all")
+    public int delete() {
+        return teamService.deleteTestDataAfter();
+    }
+
     public TeamDto teamToDto(Team team) {
         System.out.println("team = " + team);
         UserDetail userDetail = team.getLeader().getUserDetail();

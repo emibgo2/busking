@@ -1,15 +1,13 @@
 package com.example.demo.user.userDetail;
 
 import com.example.demo.team.Team;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDetailDto {
