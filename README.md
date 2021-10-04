@@ -12,7 +12,8 @@ Base URL : https://busking-back.herokuapp.com/
 URL|METHOD|Description|Params
 :---:|:---:|:---:|:---:|
 /user/find/{username}|GET|username을 통한 사용자 정보 조회|ex) username = iu@naver.com
-/user/{nickname}|GET|nickname을 통한 사용자 정보 조회|ex) nickname = 이
+/user/{nickname}|GET|	nickname 을 통한 사용자 정보 조회 (한명, 전부 일치)	|ex) nickname = 아이유
+/user/find/{nickname}|GET|nickname 값을 갖고 있는 모든 사용자의 정보를 조회	|ex) nickname = 이
 /user/all|GET|모든 사용자 정보 조회|
 /user|POST|사용자 정보 등록|"username":"필수", "password":"필수", "nickname":"필수", "birthday":"필수", "gender":"MALE" or "FEMALE"
 /user/login|POST|사용자 로그인 (JWT)|"username":"필수", "password":"필수"
