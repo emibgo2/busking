@@ -98,6 +98,7 @@ public class TeamApiController {
                 return new Team();
             });
             if (Check.getTeamName() == null) {
+
                 teamService.save(testTeam);
                 log.info("새 팀 생성");
             }

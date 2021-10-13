@@ -12,11 +12,15 @@ Base URL : https://busking-back.herokuapp.com/
 URL|METHOD|Description|Params
 :---:|:---:|:---:|:---:|
 /user/find/{username}|GET|username을 통한 사용자 정보 조회|ex) username = iu@naver.com
-/user/{nickname}|GET|nickname을 통한 사용자 정보 조회|ex) nickname = 이
+/user/{nickname}|GET|nickname 을 통한 사용자 정보 조회 (한명, 전부 일치)|ex) nickname = 아이유
+/user/{nickname}/check|GET|nickname 중복 여부 판단 (true - 사용가능한 닉네임)|ex) nickname = 아이유
+/user/like/{nickname}|GET|nickname 값을 갖고 있는 모든 사용자의 정보를 조회|ex) nickname = 이
 /user/all|GET|모든 사용자 정보 조회|
 /user|POST|사용자 정보 등록|"username":"필수", "password":"필수", "nickname":"필수", "birthday":"필수", "gender":"MALE" or "FEMALE"
+/user/id/check|POST|username 중복 여부 판단 (true - 사용가능한 닉네임)|"username":"필수"
 /user/login|POST|사용자 로그인 (JWT)|"username":"필수", "password":"필수"
-/user/detail|PUT|사용자 세부 정보 등록|"nickname":"필수", "profileImgURL": " ", "introduce": " "
+/user/{oldNickname}/detail|PUT|사용자 세부 정보 등록|oldNickname <- 이전 닉네임,"nickname":"필수", "profileImgURL": " ", "introduce": " "
+  
 
 ## Music API 명세서
 URL|METHOD|Description|Params

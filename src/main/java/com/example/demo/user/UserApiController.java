@@ -2,6 +2,7 @@ package com.example.demo.user;
 
 
 import com.example.demo.ResponseDto;
+import com.example.demo.config.auth.jwt.JwtDto;
 import com.example.demo.config.auth.jwt.JwtTokenProvider;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.example.demo.user.userDetail.UserDetailRepository;
@@ -30,16 +31,13 @@ public class UserApiController {
 
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> user) {
+    public JwtDto login(@RequestBody Map<String, String> user) {
         User member = userRepository.findByUsername(user.get("username")).orElseThrow(
                 () -> new IllegalArgumentException("없는 아이디 입니다."));
         if (!encoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        Map<String, String> jwtDto = new HashMap<>();
-        jwtDto.put("token", jwtTokenProvider.createToken(member.getUsername(), member.getRole()));
-        jwtDto.put("username", member.getNickname());
-        return jwtDto;
+        return new JwtDto(jwtTokenProvider.createToken(member.getUsername(), member.getRole()), member.getNickname(),"없음");
     }
 
     @GetMapping("/find/{username}")
@@ -114,9 +112,16 @@ public class UserApiController {
 
 
     @PostMapping("/id/check")
-    public ResponseDto<Integer> idCheck(@RequestBody User user) {
+    public ResponseDto<Boolean> idCheck(@RequestBody User user) {
 
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), userService.checkMemberId(user));
+        return new ResponseDto<>(HttpStatus.OK.value(), userService.checkMemberId(user));
+        // 유저 회원가입 메소드
+    }
+
+    @GetMapping("/{nickname}/check")
+    public ResponseDto<Boolean> nicknameCheck(@PathVariable String nickname ) {
+
+        return new ResponseDto<>(HttpStatus.OK.value(), userService.checkNickname(nickname));
         // 유저 회원가입 메소드
     }
 
@@ -143,9 +148,10 @@ public class UserApiController {
 
     // UserDetail 부분
 
-    @PutMapping("/detail")
-    public ResponseDto<UserDetailDto> userDetailSave(@RequestBody UserDetailDto userDetailDto) {
-        userService.detailSave(userDetailDto);
+    @PutMapping("/{oldNickname}/detail")
+    public ResponseDto<UserDetailDto> userDetailSave(@PathVariable String oldNickname, @RequestBody UserDetailDto userDetailDto) {
+        System.out.println("oldNickname = " + oldNickname);
+        userService.detailEdit(oldNickname, userDetailDto);
         return new ResponseDto<>(HttpStatus.OK.value(), userDetailDto);
 
     }

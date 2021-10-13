@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class JwtDto {
     private String token;
     private String userNickname;
+    private String teamName;
 }

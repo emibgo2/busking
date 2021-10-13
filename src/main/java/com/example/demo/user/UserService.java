@@ -33,18 +33,34 @@ public class UserService {
     public   List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
-    public int checkMemberId(User requestUser) {
+    public boolean checkMemberId(User requestUser) {
         User user= userRepository.findByUsername(requestUser.getUsername()).orElseGet(() -> {
             return new User();
         });
-        System.out.println(user);
+
         if (user.getPassword() == null) {
-            System.out.println("result: "+ 1);
-            return 1;
+
+            return true;
             // 해당 아이디 사용가능
         }
-        else{             System.out.println("result: "+ 2);
-            return 2;}
+        else{
+            return false;}
+
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkNickname(String nickname) {
+        User user= userRepository.findByNickname(nickname).orElseGet(() -> {
+            return new User();
+        });
+
+        if (user.getPassword() == null) {
+
+            return true;
+            // 해당 아이디 사용가능
+        }
+        else{
+            return false;}
 
     }
 
@@ -52,8 +68,7 @@ public class UserService {
     public int joinMember(@Validated User user, int roleType ) {
         if (roleType ==0) roleType=1; // default 값 1
 
-        int checkResult = checkMemberId(user);
-        if (checkResult == 1) {
+        if (checkMemberId(user)) {
             String rawPassword = user.getPassword(); // 원문
             String encPassword = encoder.encode(rawPassword);
             user.setPassword(encPassword);
@@ -86,6 +101,20 @@ public class UserService {
             user.getUserDetail().setProfileImgURL(userDetailDto.getProfileImgURL());
         }
 
+    }
+    @Transactional
+    public void  detailEdit(String oldNickname,UserDetailDto userDetailDto) {
+        User user= userRepository.findByNickname(oldNickname).orElseThrow(() -> {
+            //User가 있는 지 먼저 확인
+            return new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        });
+        if (user.getUserDetail() == null) {
+            userDetailRepository.mSave(user.getId(), userDetailDto.getProfileImgURL(), userDetailDto.getIntroduce());
+        } else {
+            user.setNickname(userDetailDto.getNickname());
+            user.getUserDetail().setIntroduce(userDetailDto.getIntroduce());
+            user.getUserDetail().setProfileImgURL(userDetailDto.getProfileImgURL());
+        }
 
     }
 
@@ -176,6 +205,7 @@ public class UserService {
     public void Test() {
 
     }
+
 
 }
 @Service

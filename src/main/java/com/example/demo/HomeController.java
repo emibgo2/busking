@@ -30,12 +30,14 @@ public class HomeController {
         // UserController 부분 API URL
         List<Method> userController = new ArrayList<>();
         userController.add(new Method( "/user/find/{username}", "user/find/iu@naver.com","GET", "username을 통한 사용자 정보 조회", "ex) username = iu@naver.com"));
-        userController.add(new Method( "/user/{nickname}", "user/아이유","GET", "nickname 을 통한 사용자 정보 조회 (한명, 전부 일치)", "ex) nickname = 아이유"));
+        userController.add(new Method("/user/{nickname}", "user/아이유", "GET", "nickname 을 통한 사용자 정보 조회 (한명, 전부 일치)", "ex) nickname = 아이유"));
+        userController.add(new Method( "/user/{nickname}/check", "user/아이유/check","GET", "nickname 중복 여부 판단 (true - 사용가능한 닉네임)", "ex) nickname = 아이유"));
         userController.add(new Method( "/user/like/{nickname}", "user/like/이","GET", "nickname 값을 갖고 있는 모든 사용자의 정보를 조회", "ex) nickname = 이"));
         userController.add(new Method("/user/all", "user/all","GET", "모든 사용자 정보 조회", "") );
         userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "\"username\":\"필수\", \"password\":\"필수\", \"nickname\":\"필수\", \"birthday\":\"필수\", \"gender\":\"MALE\" or \"FEMALE\""));
+        userController.add(new Method( "/user/id/check", " ","POST", "username 중복 여부 판단 (true - 사용가능한 닉네임)", "\"username\":\"필수\""));
         userController.add(new Method("/user/login", " ", "POST", "사용자 로그인 (JWT)", "\"username\":\"필수\", \"password\":\"필수\""));
-        userController.add(new Method("/user/detail", " ", "PUT", "사용자 세부 정보 등록", " \"nickname\":\"필수\", \"profileImgURL\": \" \", \"introduce\": \" \""));
+        userController.add(new Method("/user/{oldNickname}/detail", " ", "PUT", "사용자 세부 정보 등록", " oldNickname <- 이전 닉네임,\"nickname\":\"필수\", \"profileImgURL\": \" \", \"introduce\": \" \""));
 
         // Music 부분 API URL
         List<Method> musicController = new ArrayList<>();

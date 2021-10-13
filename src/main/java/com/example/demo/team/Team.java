@@ -51,10 +51,11 @@ public class Team {
     private List<TeamBoard> notice;
 
     @Lob
+    @Column()
     private String qrImg;
 
-    @Value("false")
-    private Boolean onAir;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean onAir =false;
 
     @CreationTimestamp
     private Timestamp createDate;

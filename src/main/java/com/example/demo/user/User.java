@@ -46,7 +46,7 @@ public class User {
     @NotNull(message = "필수 값입니다.")
     private String password; // ID
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, unique = true)
     @NotNull(message = "필수 값입니다.")
     private String nickname;
 
