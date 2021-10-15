@@ -9,9 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -39,19 +41,20 @@ public class User {
 
     @Column(nullable = false, length = 30, unique = true)
     @Email(message = "이메일 형식에 맞지 않습니다.")
-    @NotNull(message = "필수 값입니다.")
+    @NotBlank(message = "필수 값입니다.")
     private String username; // ID
 
     @Column(nullable = false, length = 100, unique = true)
-    @NotNull(message = "필수 값입니다.")
+    @NotBlank(message = "필수 값입니다.")
     private String password; // ID
 
     @Column(nullable = false, length = 20, unique = true)
-    @NotNull(message = "필수 값입니다.")
+    @NotBlank(message = "필수 값입니다.")
     private String nickname;
 
     @Column(nullable = false)
     @NotNull(message = "필수 값입니다.")
+    @Range(min = 1950, max = 2021)
     private int birthday;
 
     @Enumerated(EnumType.ORDINAL)
