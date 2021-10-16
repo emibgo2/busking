@@ -1,10 +1,8 @@
 package com.example.demo;
 
-import com.example.demo.Method;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +35,7 @@ public class HomeController {
         userController.add(new Method("/user", " ", "POST", "사용자 정보 등록", "\"username\":\"필수\", \"password\":\"필수\", \"nickname\":\"필수\", \"birthday\":\"필수\", \"gender\":\"MALE\" or \"FEMALE\""));
         userController.add(new Method( "/user/id/check", " ","POST", "username 중복 여부 판단 (true - 사용가능한 닉네임)", "\"username\":\"필수\""));
         userController.add(new Method("/user/login", " ", "POST", "사용자 로그인 (JWT)", "\"username\":\"필수\", \"password\":\"필수\""));
-        userController.add(new Method("/user/{oldNickname}/detail", " ", "PUT", "사용자 세부 정보 등록", " oldNickname <- 이전 닉네임,\"nickname\":\"필수\", \"profileImgURL\": \" \", \"introduce\": \" \""));
+        userController.add(new Method("/user/detail/{oldNickname}", " ", "PUT", "사용자 세부 정보 등록", " oldNickname <- 이전 닉네임,\"nickname\":\"필수\", \"profileImgURL\": \" \", \"introduce\": \" \""));
 
         // Music 부분 API URL
         List<Method> musicController = new ArrayList<>();

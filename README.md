@@ -1,3 +1,5 @@
+
+
 # Busking Project
 
 ## Project Name: Busking
@@ -19,7 +21,7 @@ URL|METHOD|Description|Params
 /user|POST|사용자 정보 등록|"username":"필수", "password":"필수", "nickname":"필수", "birthday":"필수", "gender":"MALE" or "FEMALE"
 /user/id/check|POST|username 중복 여부 판단 (true - 사용가능한 닉네임)|"username":"필수"
 /user/login|POST|사용자 로그인 (JWT)|"username":"필수", "password":"필수"
-/user/{oldNickname}/detail|PUT|사용자 세부 정보 등록|oldNickname <- 이전 닉네임,"nickname":"필수", "profileImgURL": " ", "introduce": " "
+/user/detail/{oldNickname}|PUT|사용자 세부 정보 등록|oldNickname <- 이전 닉네임,"nickname":"필수", "profileImgURL": " ", "introduce": " "
   
 
 ## Music API 명세서
