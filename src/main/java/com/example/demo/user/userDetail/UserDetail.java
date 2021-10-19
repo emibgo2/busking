@@ -31,6 +31,7 @@ public class UserDetail {
     @JoinColumn(name ="userId")
     private User user;
 
+    @Lob
     private String profileImgURL;
 
     @Lob

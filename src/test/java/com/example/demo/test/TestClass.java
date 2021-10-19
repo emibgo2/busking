@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 public class TestClass {
     @Test
     void htmlToReadme() {
+
+        String te = "We couldn't turn around~'Til we were upside down~I'll be the bad guy now~But no, I ain't too proud~I couldn't be there~Even when I tried~You don't believe it~We do this every time~Seasons change and our love went cold~Feed the flame 'cause we can't let it go~Run away, but we're running in circles~Run away, run away~I dare you to do something~I'm waiting on you again~So I don't take the blame~Run away, but we're running in circles~Run away, run away, run away~Let go~I got a feeling that it's time to let go~I say so~I knew that this was doomed from the get-go~You thought that it was special, special~But it was just the sex though, the sex though~And I still hear the echoes (the echoes)~I got a feeling that it's time to let it go, let it go~Seasons change and our love went cold~Feed the flame 'cause we can't let it go~Run away, but we're running in circles~Run away, run away~I dare you to do something~I'm waiting on you again~So I don't take the blame~Run away, but we're running in circles~Run away, run away, run away~Maybe you don't understand what I'm going through~It's only me~What you got to lose?~Make up your mind, tell me~What are you gonna do?~It's only me~Let it go~Seasons change and our love went cold~Feed the flame 'cause we can't let it go~Run away, but we're running in circles~Run away, run away~I dare you to do something~I'm waiting on you again~So I don't take the blame~Run away, but we're running in circles~Run away, run away, run away~";
+        String re = te.replace("~", "\n");
+
+        System.out.println("re = \n" + re);
         String s = "/user/find/{username}\tGET\tusername을 통한 사용자 정보 조회\tex) username = iu@naver.com\n" +
                 "/user/{nickname}\tGET\tnickname 을 통한 사용자 정보 조회 (한명, 전부 일치)\tex) nickname = 아이유\n" +
                 "/user/{nickname}/check\tGET\tnickname 중복 여부 판단 (true - 사용가능한 닉네임)\tex) nickname = 아이유\n" +

@@ -15,12 +15,18 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Music {
 
+    public Music(String title, String singer, String profileImgURL,String lyrics) {
+        this.title = title;
+        this.singer = singer;
+        this.profileImgURL = profileImgURL;
+        this.lyrics = lyrics;
+    }
     public Music(String title, String singer, String profileImgURL) {
         this.title = title;
         this.singer = singer;
         this.profileImgURL = profileImgURL;
-    }
 
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,5 +42,6 @@ public class Music {
     @Lob
     private String profileImgURL; // 앨범 커버
 
+    @Lob
     private String lyrics; // 가사
 }
