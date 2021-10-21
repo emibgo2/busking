@@ -16,7 +16,8 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
-
+    public static int refreshCount=0;
+    public static int onAirCount=0;
     @Transactional
     public Integer onAir(String teamName) {
         Team findTeam = teamRepository.findByTeamName(teamName)
@@ -26,7 +27,8 @@ public class TeamService {
         if (findTeam.getOnAir()==null || findTeam.getOnAir()==false ) {
             findTeam.setOnAir(true);
         }else findTeam.setOnAir(false);
-
+        onAirCount++;
+        log.info("{} Team On Air! / onAir count={}", teamName,onAirCount);
         return 200;
     }
     @Transactional
@@ -35,6 +37,8 @@ public class TeamService {
             teamRepository.deleteById(i);
             log.info("{} 번 user가 삭제되었습니다.",i);
         }
+        refreshCount ++;
+        log.info(" Data refresh! / Refresh count: {}",refreshCount);
         return HttpStatus.OK.value();
     }
     @Transactional
