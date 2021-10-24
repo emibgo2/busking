@@ -9,6 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -17,6 +22,8 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     public static int refreshCount=0;
+    public static Map<String, Timestamp> refreshTimestamp = new ConcurrentHashMap<>();
+    public static Map<String, Timestamp> onAirTimestamp  = new ConcurrentHashMap<>();
     public static int onAirCount=0;
     @Transactional
     public Integer onAir(String teamName) {
@@ -28,7 +35,8 @@ public class TeamService {
             findTeam.setOnAir(true);
         }else findTeam.setOnAir(false);
         onAirCount++;
-        log.info("{} Team On Air! / onAir count={}", teamName,onAirCount);
+        onAirTimestamp.put(onAirCount + "번째 onAir", Timestamp.valueOf(LocalDateTime.now()));
+        log.info("{} Team On Air! / onAir count={} / Time= {}", teamName,onAirCount,Timestamp.valueOf(LocalDateTime.now()));
         return 200;
     }
     @Transactional
@@ -38,7 +46,8 @@ public class TeamService {
             log.info("{} 번 user가 삭제되었습니다.",i);
         }
         refreshCount ++;
-        log.info(" Data refresh! / Refresh count: {}",refreshCount);
+        refreshTimestamp.put(refreshCount + "번째 refresh", Timestamp.valueOf(LocalDateTime.now()));
+        log.info(" Data refresh! / Refresh count: {} / Time= {}",refreshCount,Timestamp.valueOf(LocalDateTime.now()));
         return HttpStatus.OK.value();
     }
     @Transactional

@@ -1,9 +1,7 @@
 package com.example.demo.team;
 
 import com.example.demo.ResponseDto;
-import com.example.demo.music.Music;
 import com.example.demo.user.User;
-import com.example.demo.user.UserDto;
 import com.example.demo.user.UserService;
 import com.example.demo.user.userDetail.UserDetail;
 import lombok.AllArgsConstructor;
@@ -16,6 +14,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
@@ -26,6 +25,7 @@ public class TeamApiController {
     private final TeamRepository teamRepository;
     private final TeamService teamService;
     public List<TeamSaveForm> TeamList = new ArrayList<>();
+
 
     private final UserService userService;
 
@@ -53,6 +53,16 @@ public class TeamApiController {
         }
         TeamDto teamDto = teamToDto(findTeam);
         return new ResponseDto<>(HttpStatus.OK.value(), teamDto);
+    }
+
+    @GetMapping("refreshCount/onAirCount")
+    public Map<Object, Object> refreshAndonAirCountView() {
+        Map<Object, Object> returnObject = new ConcurrentHashMap<>();
+        returnObject.put("refreshCount", TeamService.refreshCount);
+        returnObject.put("Refresh TimeStamp", TeamService.refreshTimestamp);
+        returnObject.put("onAirCount", TeamService.onAirCount);
+        returnObject.put("onAir TimeStamp", TeamService.onAirTimestamp);
+        return returnObject;
     }
 
     @PostMapping
