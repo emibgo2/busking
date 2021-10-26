@@ -2,6 +2,7 @@ package com.example.demo.team;
 
 import com.example.demo.teamBoard.TeamBoard;
 import com.example.demo.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Team {
     public Team(String teamName, User leader, String introduce) {

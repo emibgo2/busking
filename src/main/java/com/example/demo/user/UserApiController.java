@@ -62,8 +62,7 @@ public class UserApiController {
 //        }
 
         User user = userService.userFindByUsername(username);
-        System.out.println(3);
-        System.out.println("user = " + user);
+
         UserDto userDto = userToDto(user);
         if (user.getUsername() == null) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), new UserDto());
         return new ResponseDto<>(HttpStatus.OK.value(), userDto);

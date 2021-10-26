@@ -5,6 +5,7 @@ import com.example.demo.team.Team;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -53,9 +54,10 @@ public class User {
     @NotBlank(message = "필수 값입니다.")
     private String nickname;
 
-    @ManyToOne(fetch =FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teamId")
     private Team team;
+
 
     @Column(nullable = false)
     @NotNull(message = "필수 값입니다.")

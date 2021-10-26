@@ -82,6 +82,7 @@ public class UserService {
     }
     @Transactional
     public int joinMember(@Validated User user, int roleType ) {
+        System.out.println("????");
         if (roleType ==0) roleType=1; // default 값 1
 
         if (checkMemberId(user)) {
@@ -161,7 +162,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User userFindByUsername(String username){
-        System.out.println("username = " + username);
         return userRepository.findByUsername(username)
                 .orElseGet(() -> {
                     return new User();

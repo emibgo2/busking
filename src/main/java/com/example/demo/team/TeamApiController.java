@@ -35,8 +35,13 @@ public class TeamApiController {
 //        for (int i = 0; i < all.size(); i++) {
 //            all.get(i).setId(i+1L);
 //        }
-        if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),all);
-        else return new ResponseDto<>(HttpStatus.OK.value(), teamRepository.findAll());
+        List<TeamDto> teamDtos = new ArrayList<>();
+        for (Team team : all) {
+            teamDtos.add(new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir()));
+        }
+
+        if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),teamDtos);
+        else return new ResponseDto<>(HttpStatus.OK.value(), teamDtos);
     }
 
     @GetMapping("/{teamName}")
@@ -67,7 +72,6 @@ public class TeamApiController {
 
     @PostMapping
     public ResponseDto<TeamSaveForm> save(@Validated @RequestBody TeamSaveForm team) {
-        System.out.println("save.team = " + team);
         teamService.save(team);
         return new ResponseDto<>(HttpStatus.OK.value(), team);
     }
@@ -84,7 +88,6 @@ public class TeamApiController {
     }
 
     public TeamDto teamToDto(Team team) {
-        System.out.println("team = " + team);
         UserDetail userDetail = team.getLeader().getUserDetail();
         if (userDetail == null) {
             return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir());

@@ -35,7 +35,7 @@ public class TeamService {
             findTeam.setOnAir(true);
         }else findTeam.setOnAir(false);
         onAirCount++;
-        onAirTimestamp.put(onAirCount + "번째 onAir", Timestamp.valueOf(LocalDateTime.now()));
+        onAirTimestamp.put(onAirCount + "번째 요청 Team: "+teamName+"/ onAir Time:", Timestamp.valueOf(LocalDateTime.now()));
         log.info("{} Team On Air! / onAir count={} / Time= {}", teamName,onAirCount,Timestamp.valueOf(LocalDateTime.now()));
         return 200;
     }
@@ -52,7 +52,7 @@ public class TeamService {
     }
     @Transactional
     public void save(TeamSaveForm team) {
-        System.out.println("team.getLeaderName() = " + team.getLeaderName());
+
         User user = userRepository.findByNickname(team.getLeaderName()).orElseThrow(() -> {
             return new IllegalArgumentException("존재하지 않는 유저입니다.");
         });
