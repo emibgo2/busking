@@ -18,7 +18,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class Team {
     public Team(String teamName, User leader, String introduce) {

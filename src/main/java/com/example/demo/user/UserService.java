@@ -175,8 +175,7 @@ public class UserService {
                 .orElseGet(() -> {
                     return new User();
                 });
-        System.out.println("UserService.userFindByNickname");
-        System.out.println("user = " + user);
+
         return user;
         // 해당 id값에 해당하는 Storage를 Return
     }
