@@ -110,6 +110,7 @@ public class TeamApiController {
             if (Check.getTeamName() == null) {
 
                 teamService.save(testTeam);
+                userService.joinTeam(testTeam.getLeaderName(), testTeam);
                 log.info("새 팀 생성");
             }
             else log.info("이미 팀이 생성 되어 있습니다.");

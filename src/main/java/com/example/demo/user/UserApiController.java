@@ -36,7 +36,13 @@ public class UserApiController {
         if (!encoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
         }
-        return new JwtDto(jwtTokenProvider.createToken(member.getUsername(), member.getRole()), member.getNickname(),"없음");
+        String teamName=null;
+        if (member.getTeam() != null) {
+            teamName = member.getTeam().getTeamName();
+
+        }
+
+        return new JwtDto(jwtTokenProvider.createToken(member.getUsername(), member.getRole()), member.getNickname(),teamName);
     }
 
     @GetMapping("/find/{username}")

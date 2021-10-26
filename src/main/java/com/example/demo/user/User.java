@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 
+import com.example.demo.team.Team;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -51,6 +52,10 @@ public class User {
     @Column(nullable = false, length = 20, unique = true)
     @NotBlank(message = "필수 값입니다.")
     private String nickname;
+
+    @ManyToOne(fetch =FetchType.EAGER)
+    @JoinColumn(name = "teamId")
+    private Team team;
 
     @Column(nullable = false)
     @NotNull(message = "필수 값입니다.")

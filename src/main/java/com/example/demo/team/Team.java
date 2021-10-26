@@ -36,15 +36,20 @@ public class Team {
     private String teamName;
 
     @ManyToOne
-    @JoinColumn(name = "userNickname")
+    @JoinColumn(name = "leaderNickname")
     private User leader;
 
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    // mappedBy가 적혀잇으면 연관관계의 주인이 아니다( FK가 아니다) , DB에 컬럼을 만들지 마세요
+    @JsonIgnoreProperties({"team"})
+    @OrderBy("id desc")
+    private List<User> userList;
 //  User를 넣을 것인가?  private MusicSession session;
 
     @Lob
     private String introduce;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     // mappedBy가 적혀잇으면 연관관계의 주인이 아니다( FK가 아니다) , DB에 컬럼을 만들지 마세요
     @JsonIgnoreProperties({"team"})
     @OrderBy("id desc")

@@ -1,6 +1,9 @@
 package com.example.demo.user;
 
 
+import com.example.demo.team.Team;
+import com.example.demo.team.TeamRepository;
+import com.example.demo.team.TeamSaveForm;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.example.demo.user.userDetail.UserDetailRepository;
@@ -30,6 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final UserDetailRepository userDetailRepository;
+    private final TeamRepository teamRepository;
     public   List<User> userList = new ArrayList<>();
 
     @Transactional(readOnly = true)
@@ -64,6 +68,18 @@ public class UserService {
 
     }
 
+    @Transactional
+    public void joinTeam(String userNickname, TeamSaveForm team) {
+        User user= userRepository.findByNickname(userNickname).orElseGet(() -> {
+            return new User();
+        });
+        Team findTeam = teamRepository.findByTeamName(team.getTeamName())
+                .orElseThrow(() -> {
+                    return new IllegalArgumentException("error! 팀이 없습니다");
+                });
+        user.setTeam(findTeam);
+        findTeam.getUserList().add(user);
+    }
     @Transactional
     public int joinMember(@Validated User user, int roleType ) {
         if (roleType ==0) roleType=1; // default 값 1

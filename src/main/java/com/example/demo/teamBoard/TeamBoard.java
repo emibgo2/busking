@@ -34,7 +34,7 @@ public class TeamBoard {
 
     private int count; // 조회수
 
-    @ManyToOne(fetch = FetchType.EAGER) // Many = Many, User =One
+    @ManyToOne(fetch = FetchType.LAZY) // Many = Many, User =One
     @JoinColumn(name = "team")
     private Team team; // DB 는 오브젝트를 저장할 수 없다. FK, 자바는 오브젝트를 저장할 수 있다.
     // User 데이터가 One 이기 때문에 foreign key 로 만들어짐
