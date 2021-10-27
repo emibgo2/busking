@@ -7,6 +7,8 @@ import com.example.demo.team.TeamSaveForm;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.example.demo.user.userDetail.UserDetailRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -82,7 +84,6 @@ public class UserService {
     }
     @Transactional
     public int joinMember(@Validated User user, int roleType ) {
-        System.out.println("????");
         if (roleType ==0) roleType=1; // default 값 1
 
         if (checkMemberId(user)) {
@@ -144,10 +145,31 @@ public class UserService {
 
     @Transactional
     public int deleteTestDataAfter() {
+        List<UserDetail> userDetailList = new ArrayList<>();
+
+        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
+        userDetailList.add(new UserDetail(userList.get(0), "https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg", "안녕하세요 아이유 입니다."));
+        userDetailList.add(new UserDetail(userList.get(1), "https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg", "안녕하세요 헤이즈 입니다."));
+        userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
+        userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
+
         for (Long i =  userRepository.count(); i > 4; i--) {
             userRepository.deleteById(i);
             log.info("{} 번 user가 삭제되었습니다.",i);
         }
+        for (Long i = 1L; i <= userList.size(); i++) {
+            User user = userRepository.findById(i).orElseThrow(() -> {
+                return new IllegalArgumentException("User가 없다");
+            });
+            user.setNickname(userList.get(i.intValue() -1).getNickname());
+            user.getUserDetail().setProfileImgURL(userDetailList.get(i.intValue()-1).getProfileImgURL());
+            user.getUserDetail().setIntroduce(userDetailList.get(i.intValue()-1).getIntroduce());
+        }
+//        for (Long i = 1L; i <= userList.size(); i++) {
+//            System.out.println("i = " + i);
+//            userList.get(i.intValue()).setUserDetail(userDetailList.get(i.intValue() -1));
+//
+//        }
         return HttpStatus.OK.value();
     }
 
@@ -223,11 +245,14 @@ public class UserService {
 
 
 }
+
 @Service
 @RequiredArgsConstructor
 class TestDataForUser implements InitializingBean {
     private final UserRepository userRepository;
     private final UserService userService;
+
+
     @Override
     public void afterPropertiesSet() throws Exception {
         System.out.println("afterPropertiesSet");
@@ -236,13 +261,13 @@ class TestDataForUser implements InitializingBean {
         List<UserDetail> userDetailList = new ArrayList<>();
 
         // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
-        userDetailList.add(new UserDetail( userList.get(0), "https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", "안녕하세요 아이유 입니다."));
-        userDetailList.add(new UserDetail( userList.get(1), "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", "안녕하세요 헤이즈 입니다."));
-        userDetailList.add(new UserDetail( userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
+        userDetailList.add(new UserDetail(userList.get(0), "https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg", "안녕하세요 아이유 입니다."));
+        userDetailList.add(new UserDetail(userList.get(1), "https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg", "안녕하세요 헤이즈 입니다."));
+        userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
         userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
-        int count =1;
+        int count = 1;
         for (UserDetail userDetail : userDetailList) {
-            userService.detailSave(new UserDetailDto(userList.get(count-1).getNickname(),userDetail.getProfileImgURL(),userDetail.getIntroduce()));
+            userService.detailSave(new UserDetailDto(userList.get(count - 1).getNickname(), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
             count++;
         }
     }
