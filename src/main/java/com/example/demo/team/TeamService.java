@@ -26,7 +26,7 @@ public class TeamService {
     public static Map<String, Timestamp> onAirTimestamp  = new ConcurrentHashMap<>();
     public static int onAirCount=0;
     @Transactional
-    public Integer onAir(String teamName) {
+    public boolean onAir(String teamName) {
         Team findTeam = teamRepository.findByTeamName(teamName)
                 .orElseThrow(() -> {
                     return new IllegalArgumentException("error! 팀이 없습니다");
@@ -37,7 +37,7 @@ public class TeamService {
         onAirCount++;
         onAirTimestamp.put(onAirCount + "번째 요청 Team: "+teamName+"/ onAir Time:", Timestamp.valueOf(LocalDateTime.now()));
         log.info("{} Team On Air! / onAir count={} / Time= {}", teamName,onAirCount,Timestamp.valueOf(LocalDateTime.now()));
-        return 200;
+        return findTeam.getOnAir();
     }
     @Transactional
     public int deleteTestDataAfter() {

@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -33,13 +31,17 @@ public class RoomService {
     }
 
     @Transactional
-    public void createRoom(RoomSaveDto room) {
+    public String createRoom(RoomSaveDto room) {
         System.out.println("room = " + room);
         Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
             return new IllegalArgumentException("해당하는 Team 이 없습니다.");
         });
 
+        if (team.getOnAirRoom() != null) {
+            return "이미 방송중인 팀입니다.";
+        }
         roomRepository.save(new Room(room.getRoomName(), team, room.getIntroduce()));
+        return "Room URL:" + room.getRoomName() + "/" + room.getTeamName();
     }
 
 
@@ -49,8 +51,10 @@ public class RoomService {
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
 
-        Optional<RMusic> reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger());
-        if (reserMusic.isEmpty()) {
+        RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger()).orElseGet(() -> {
+            return new RMusic();
+        });
+        if (reserMusic.getSinger().isEmpty()) {
             RMusic rMusic = music.musicToRMusic(music);
             rMusic.setMusicRoom(findRoom);
             rMusicRepository.save(rMusic);
@@ -76,6 +80,10 @@ public class RoomService {
 
     @Transactional
     public void deleteRoom(RoomSaveDto room) {
+//        Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
+//            return new IllegalArgumentException("해당하는 Team 이 없습니다.");
+//        });
+//        team.setOnAir(false);
         roomRepository.deleteByRoomNameAndOnAirTeam_TeamName(room.getRoomName(), room.getTeamName());
 
     }

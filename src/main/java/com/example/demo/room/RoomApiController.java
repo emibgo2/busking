@@ -26,11 +26,11 @@ public class RoomApiController {
     private final MusicRepository musicRepository;
 
     @PostMapping
-    public ResponseDto<Integer> save(@RequestBody RoomSaveDto room) {
+    public ResponseDto<String> save(@RequestBody RoomSaveDto room) {
         // 공지사항을 저장하는 메소드
-        roomService.createRoom(room);
+
         // Room의 내용과 작성 유저의 정보를 DB에 저장
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+        return new ResponseDto<>(HttpStatus.OK.value(), roomService.createRoom(room));
     }
 
     @DeleteMapping
@@ -40,7 +40,7 @@ public class RoomApiController {
         // Room의 내용과 작성 유저의 정보를 DB에 저장
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
-    
+
     @PostMapping("/{roomName}/{teamName}/music")
     public ResponseDto<RoomDto> musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
         return roomService.reservationMusic(roomName, teamName, music);

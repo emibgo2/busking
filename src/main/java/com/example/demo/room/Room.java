@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Builder
@@ -29,7 +29,7 @@ public class Room {
         this.introduce = introduce;
     }
 
-    @NotNull(message = "방 이름은 필수 입니다.")
+    @NotBlank(message = "방 이름은 필수 입니다.")
     @Column(length = 40)
     private String roomName;
 
@@ -56,8 +56,7 @@ public class Room {
     @JsonIgnoreProperties({"musicRoom"})
     @OrderBy("id asc")
     private List<RMusic> reservationMusic;
-
-
+    
     public RoomDto roomToRoomDTO() {
         return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce, new User().userListToDtoList(this.viewer), this.reservationMusic);
     }

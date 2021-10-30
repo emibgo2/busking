@@ -78,7 +78,7 @@ public class TeamApiController {
     @PostMapping("/onAir")
     public ResponseDto onAir(@RequestBody Map<String, String> teamNameJson) {
         String teamName = teamNameJson.get("teamName");
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), teamService.onAir(teamName));
+        return new ResponseDto<Boolean >(HttpStatus.OK.value(), teamService.onAir(teamName));
     }
 
     @DeleteMapping("/all")
