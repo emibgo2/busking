@@ -10,15 +10,12 @@ public class TestClass {
         String re = te.replace("~", "\n");
 
         System.out.println("re = \n" + re);
-        String s = "/user/find/{username}\tGET\tusername을 통한 사용자 정보 조회\tex) username = iu@naver.com\n" +
-                "/user/{nickname}\tGET\tnickname 을 통한 사용자 정보 조회 (한명, 전부 일치)\tex) nickname = 아이유\n" +
-                "/user/{nickname}/check\tGET\tnickname 중복 여부 판단 (true - 사용가능한 닉네임)\tex) nickname = 아이유\n" +
-                "/user/like/{nickname}\tGET\tnickname 값을 갖고 있는 모든 사용자의 정보를 조회\tex) nickname = 이\n" +
-                "/user/all\tGET\t모든 사용자 정보 조회\t\n" +
-                "/user\tPOST\t사용자 정보 등록\t\"username\":\"필수\", \"password\":\"필수\", \"nickname\":\"필수\", \"birthday\":\"필수\", \"gender\":\"MALE\" or \"FEMALE\"\n" +
-                "/user/id/check\tPOST\tusername 중복 여부 판단 (true - 사용가능한 닉네임)\t\"username\":\"필수\"\n" +
-                "/user/login\tPOST\t사용자 로그인 (JWT)\t\"username\":\"필수\", \"password\":\"필수\"\n" +
-                "/user/{oldNickname}/detail\tPUT\t사용자 세부 정보 등록\toldNickname <- 이전 닉네임,\"nickname\":\"필수\", \"profileImgURL\": \" \", \"introduce\": \" \"";
+        String s = "/room/all\tGET\t생성 되어있는 방 전체 조회\t\n" +
+                "/room/{roomName}/{teamName}\tGET\t방 이름/팀 이름으로 방 정보 조회\tex) roomName = 1번 방, teamName = 1번팀 ※ Test data 없음\n" +
+                "/room\tPOST\t방 생성\t\"roomName\":\"1번방(필수)\", \"teamName\":\"1번팀(필수)\", \"introduce\":\"안녕하세요 1번 방입니다.\"\n" +
+                "/room/{roomName}/{teamName}/music\tPOST\t방에 뮤직 예약 등록\tex) roomName = 1번 방, teamName = 1번팀 / \"title\": \"필수\", \"singer\": \"필수\", \"profileImgURL\":\" \", \"lyrics\":\" \"\n" +
+                "/room/{roomName}/{teamName}/music\tDELETE\t방에 예약되어 있는 노래 삭제\tex) roomName = 1번 방, teamName = 1번팀 / \"title\": \"필수\", \"singer\": \"필수\", \"profileImgURL\":\" \", \"lyrics\":\" \"\n" +
+                "/room\tDELETE\t방 삭제\t\"roomName\":\"1번방(필수)\", \"teamName\":\"1번팀(필수)\", \"introduce\":\"안녕하세요 1번 방입니다.\"";
 
 
         String replace = s.replace('\t', '|');

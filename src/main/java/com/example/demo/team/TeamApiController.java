@@ -52,7 +52,6 @@ public class TeamApiController {
                     return new Team();
                 });
 
-
         if (findTeam.getTeamName() == null) {
             return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), null);
         }

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface MusicRepository extends JpaRepository<Music,Long> {
 
+
+
     Optional<Music> findByTitle(String title);
 
     Optional<List<Music>> findByTitleContains(String title);

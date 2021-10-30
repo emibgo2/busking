@@ -1,11 +1,11 @@
 package com.example.demo.user;
 
 
+import com.example.demo.room.Room;
 import com.example.demo.team.Team;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +18,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -58,6 +60,9 @@ public class User {
     @JoinColumn(name = "teamId")
     private Team team;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roomId")
+    private Room room;
 
     @Column(nullable = false)
     @NotNull(message = "필수 값입니다.")
@@ -86,5 +91,24 @@ public class User {
         }
         return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
                 new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
+    }
+    public UserDto userToDto() {
+        if (this.getUserDetail()==null) {
+            return new UserDto(this.getNickname(), this.getBirthday(), this.getGender(),
+                    new UserDetailDto(this.getNickname(), null, null));
+        }
+        return new UserDto(this.getNickname(), this.getBirthday(), this.getGender(),
+                new UserDetailDto(this.getNickname(), this.getUserDetail().getProfileImgURL(), this.getUserDetail().getIntroduce()));
+    }
+
+    public List <UserDto> userListToDtoList(List<User> userList) {
+        List<UserDto> userDtoList = new ArrayList<>();
+        if (!userList.isEmpty()) {
+            for (User user : userList) {
+                userDtoList.add(user.userToDto(user));
+            }
+
+        }
+        return userDtoList;
     }
 }

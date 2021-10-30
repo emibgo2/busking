@@ -1,15 +1,14 @@
 package com.example.demo.team;
 
+import com.example.demo.room.Room;
 import com.example.demo.teamBoard.TeamBoard;
 import com.example.demo.user.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,6 +38,10 @@ public class Team {
     @ManyToOne
     @JoinColumn(name = "leaderNickname")
     private User leader;
+
+    @OneToOne
+    @JoinColumn(name = "roomId")
+    private Room onAirRoom;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     // mappedBy가 적혀잇으면 연관관계의 주인이 아니다( FK가 아니다) , DB에 컬럼을 만들지 마세요

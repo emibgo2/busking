@@ -1,6 +1,7 @@
-package com.example.demo.music;
+package com.example.demo.room.Rmusic;
 
-import com.example.demo.room.Rmusic.RMusic;
+import com.example.demo.room.Room;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,28 +9,27 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class Music {
+public class RMusic {
 
-    public Music(String title, String singer, String profileImgURL,String lyrics) {
+    public RMusic(String title, String singer, String profileImgURL, String lyrics) {
         this.title = title;
         this.singer = singer;
         this.profileImgURL = profileImgURL;
         this.lyrics = lyrics;
     }
-    public Music(String title, String singer, String profileImgURL) {
+
+    public RMusic(String title, String singer, String profileImgURL) {
         this.title = title;
         this.singer = singer;
         this.profileImgURL = profileImgURL;
-
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,18 +48,9 @@ public class Music {
     @Lob
     private String lyrics; // 가사
 
-    public RMusic musicToRMusic(Music music) {
-        return new RMusic(music.getTitle(), music.getSinger(), music.getProfileImgURL(), music.getLyrics());
-    }
+    @ManyToOne
+    @JoinColumn(name = "roomId")
+    @JsonBackReference
+    private Room musicRoom;
 
-    public List <RMusic> MusicListToDtoList(List<Music> MusicList) {
-        List<RMusic> RMusicList = new ArrayList<>();
-        if (!MusicList.isEmpty()) {
-            for (Music Music : MusicList) {
-                RMusicList.add(Music.musicToRMusic(Music));
-            }
-
-        }
-        return RMusicList;
-    }
 }
