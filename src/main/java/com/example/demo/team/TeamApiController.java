@@ -37,7 +37,7 @@ public class TeamApiController {
 //        }
         List<TeamDto> teamDtos = new ArrayList<>();
         for (Team team : all) {
-            teamDtos.add(new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir()));
+            teamDtos.add(new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg()));
         }
 
         if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),teamDtos);
@@ -58,6 +58,14 @@ public class TeamApiController {
         TeamDto teamDto = teamToDto(findTeam);
         return new ResponseDto<>(HttpStatus.OK.value(), teamDto);
     }
+
+    @PutMapping("/{teamName}")
+    public ResponseDto<TeamSaveForm> teamEdit(@PathVariable String teamName, @RequestBody TeamSaveForm teamSaveForm) {
+        teamService.edit(teamName,teamSaveForm);
+
+        return new ResponseDto<>(HttpStatus.OK.value(), teamSaveForm);
+    }
+
 
     @GetMapping("refreshCount/onAirCount")
     public Map<Object, Object> refreshAndonAirCountView() {
@@ -89,9 +97,9 @@ public class TeamApiController {
     public TeamDto teamToDto(Team team) {
         UserDetail userDetail = team.getLeader().getUserDetail();
         if (userDetail == null) {
-            return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir());
+            return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(),team.getTeamProfileImg());
         }
-        return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir());
+        return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg());
     }
 
     @PostConstruct
@@ -100,10 +108,10 @@ public class TeamApiController {
         /**
          *  Team Test Data
          */
-        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다."));
-        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다."));
-        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다."));
-        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다."));
+        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다.","https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg"));
+        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다.","https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg"));
+        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다.","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg"));
+        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다.",null));
 
         for (TeamSaveForm testTeam : TeamList) {
             Team Check = teamRepository.findByTeamName(testTeam.getTeamName()).orElseGet(() -> {

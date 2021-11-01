@@ -56,7 +56,20 @@ public class TeamService {
         User user = userRepository.findByNickname(team.getLeaderName()).orElseThrow(() -> {
             return new IllegalArgumentException("존재하지 않는 유저입니다.");
         });
-        teamRepository.save(new Team(team.getTeamName(), user, team.getIntroduce()));
+        teamRepository.save(new Team(team.getTeamName(), user, team.getIntroduce(), team.getTeamProfileImg()));
         log.info("Create Team ={}" ,team);
+    }
+
+    @Transactional
+    public void edit(String teamName, TeamSaveForm teamSaveForm) {
+        Team team = teamRepository.findByTeamName(teamName).orElseThrow(()->{
+            return new IllegalArgumentException("찾으시는 팀이 없습니다.");
+        });
+
+        team.setTeamName(teamSaveForm.getTeamName());
+        team.setIntroduce(teamSaveForm.getIntroduce());
+        team.setTeamProfileImg(teamSaveForm.getTeamProfileImg());
+
+        log.info("Edit Teat {} -> Team: {}", teamName, teamSaveForm);
     }
 }

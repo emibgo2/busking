@@ -31,17 +31,19 @@ public class RoomService {
     }
 
     @Transactional
-    public String createRoom(RoomSaveDto room) {
+    public ResponseDto<String> createRoom(RoomSaveDto room) {
         System.out.println("room = " + room);
         Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
             return new IllegalArgumentException("해당하는 Team 이 없습니다.");
         });
-
-        if (team.getOnAirRoom() != null) {
-            return "이미 방송중인 팀입니다.";
+        if ( team.getOnAirURL() != null) {
+            return new ResponseDto<>(HttpStatus.NOT_ACCEPTABLE.value(),"이미 방송중인 팀입니다.") ;
         }
+        team.setOnAirURL("https://busking-back.herokuapp.com/room/" + room.getRoomName() + "/" + room.getTeamName());
+        team.setOnAir(true);
+
         roomRepository.save(new Room(room.getRoomName(), team, room.getIntroduce()));
-        return "Room URL:" + room.getRoomName() + "/" + room.getTeamName();
+        return new ResponseDto<>(HttpStatus.OK.value(), "https://busking-back.herokuapp.com/room/" + room.getRoomName() + "/" + room.getTeamName());
     }
 
 
@@ -80,10 +82,11 @@ public class RoomService {
 
     @Transactional
     public void deleteRoom(RoomSaveDto room) {
-//        Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
-//            return new IllegalArgumentException("해당하는 Team 이 없습니다.");
-//        });
-//        team.setOnAir(false);
+        Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
+            return new IllegalArgumentException("해당하는 Team 이 없습니다.");
+        });
+        team.setOnAir(false);
+        team.setOnAirURL(null);
         roomRepository.deleteByRoomNameAndOnAirTeam_TeamName(room.getRoomName(), room.getTeamName());
 
     }

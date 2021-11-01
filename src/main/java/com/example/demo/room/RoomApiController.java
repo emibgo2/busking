@@ -30,7 +30,7 @@ public class RoomApiController {
         // 공지사항을 저장하는 메소드
 
         // Room의 내용과 작성 유저의 정보를 DB에 저장
-        return new ResponseDto<>(HttpStatus.OK.value(), roomService.createRoom(room));
+        return roomService.createRoom(room);
     }
 
     @DeleteMapping

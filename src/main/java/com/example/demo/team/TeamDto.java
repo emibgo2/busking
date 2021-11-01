@@ -18,5 +18,7 @@ public class TeamDto {
     private String teamIntroduce;
     private List<TeamBoard> notice;
     private Boolean onAir;
+    private String onAirURL;
+    private String teamProfileImg;
 
 }

@@ -15,5 +15,5 @@ public class TeamSaveForm {
     @NotNull(message = "팀장 이름은 필수!.")
     private String leaderName;
     private String introduce;
-
+    private String teamProfileImg;
 }

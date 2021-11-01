@@ -21,10 +21,11 @@ import java.util.List;
 @Builder
 @Entity
 public class Team {
-    public Team(String teamName, User leader, String introduce) {
+    public Team(String teamName, User leader, String introduce, String teamProfileImg) {
         this.teamName = teamName;
         this.leader = leader;
         this.introduce = introduce;
+        this.teamProfileImg = teamProfileImg;
     }
 
     @Id
@@ -60,11 +61,18 @@ public class Team {
     private List<TeamBoard> notice;
 
     @Lob
-    @Column()
+    @Column
     private String qrImg;
+
+    @Lob
+    @Column
+    private String teamProfileImg;
 
     @Column(columnDefinition = "boolean default false")
     private Boolean onAir =false;
+
+    @Column
+    private String onAirURL ;
 
     @CreationTimestamp
     private Timestamp createDate;

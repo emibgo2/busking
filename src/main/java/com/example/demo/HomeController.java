@@ -51,6 +51,7 @@ public class HomeController {
         teamController.add(new Method( "/team/all", "team/all","GET", " 모든 팀 조회", " "));
         teamController.add(new Method( "/team/onAir", " ","POST", "onAir 필드를 True or False로 변경", "teamName:'필수'"));
         teamController.add(new Method( "/team", " ","POST", "팀 추가", "\"teamName\":\"1번팀\", \"introduce\":\"\", \"leaderName\":\"아이유\""));
+        teamController.add(new Method( "/team/{teamName}", " ","PUT", "팀 정보 변경", "ex) teamName = 1번팀 / \"teamName\":\"1번팀\", \"introduce\":\"\", \"leaderName\":\"아이유\" "));
 
         // Room 부분 API
         List<Method> roomController = new ArrayList<>();
