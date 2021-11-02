@@ -20,6 +20,9 @@ public class RoomDto {
     private String teamName;
     @Lob
     private String introduce;
+
+    @Lob
+    private String teamProfileImg;
     private List<UserDto> viewer;
     private List<RMusic> musics;
 

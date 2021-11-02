@@ -41,7 +41,7 @@ URL|METHOD|Description|Params
 /team/all|GET|모든 팀 조회|
 /team/onAir|POST|onAir 필드를 True or False로 변경|teamName:'필수'
 /team|POST|팀 추가|"teamName":"1번팀", "introduce":"", "leaderName":"아이유"
-
+/team/{teamName}|PUT|팀 정보 변경|ex) teamName = 1번팀 / "teamName":"1번팀", "introduce":"", "leaderName":"아이유"
 ## Room API 명세서
 URL|METHOD|Description|Params
 :---:|:---:|:---:|:---:|
