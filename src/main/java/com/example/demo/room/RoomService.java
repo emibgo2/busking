@@ -32,7 +32,7 @@ public class RoomService {
 
     @Transactional
     public ResponseDto<String> createRoom(RoomSaveDto room) {
-        System.out.println("room = " + room);
+
         Team team = teamRepository.findByTeamName(room.getTeamName()).orElseThrow(() -> {
             return new IllegalArgumentException("해당하는 Team 이 없습니다.");
         });
@@ -44,6 +44,7 @@ public class RoomService {
 
         roomRepository.save(new Room(room.getRoomName(), team, room.getIntroduce(),team.getTeamProfileImg()));
 
+        log.info("Create Room! Room Information: {}",room);
         return new ResponseDto<>(HttpStatus.OK.value(), "https://busking-back.herokuapp.com/room/" + room.getRoomName() + "/" + room.getTeamName());
     }
 

@@ -1,6 +1,8 @@
 package com.example.demo.team;
 
 import com.example.demo.ResponseDto;
+import com.example.demo.room.RoomSaveDto;
+import com.example.demo.room.RoomService;
 import com.example.demo.user.User;
 import com.example.demo.user.UserService;
 import com.example.demo.user.userDetail.UserDetail;
@@ -24,6 +26,7 @@ public class TeamApiController {
 
     private final TeamRepository teamRepository;
     private final TeamService teamService;
+    private final RoomService roomService;
     public List<TeamSaveForm> TeamList = new ArrayList<>();
 
 
@@ -102,6 +105,11 @@ public class TeamApiController {
         return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg());
     }
 
+    public void roomTestData(TeamSaveForm onAirTeam) {
+        if  (onAirTeam.getTeamName()=="3번팀") return;
+        roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName()+"의 방",onAirTeam.getTeamName(),"안녕하세요 "+onAirTeam.getTeamName() +"의 방입니다."));
+
+    }
     @PostConstruct
     public void init() {
 
@@ -121,10 +129,12 @@ public class TeamApiController {
 
                 teamService.save(testTeam);
                 userService.joinTeam(testTeam.getLeaderName(), testTeam);
+                roomTestData(testTeam);
                 log.info("새 팀 생성");
             }
             else log.info("이미 팀이 생성 되어 있습니다.");
         }
+
 
     }
 

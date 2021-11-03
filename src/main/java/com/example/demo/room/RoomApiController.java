@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,12 +64,12 @@ public class RoomApiController {
     }
 
     @GetMapping("/all")
-    public ResponseDto<List<RoomSaveDto>> roomAll() {
+    public ResponseDto<List<RoomDto>> roomAll() {
         List<Room> all = roomRepository.findAll();
-        List<RoomSaveDto> roomall = new ArrayList<>();
+        List<RoomDto> roomall = new ArrayList<>();
 
         for (Room room : all) {
-            roomall.add(new RoomSaveDto(room.getRoomName(), room.getOnAirTeam().getTeamName(), room.getIntroduce()));
+            roomall.add(room.roomToRoomDTO());
         }
         return new ResponseDto<>(HttpStatus.OK.value(), roomall);
     }
@@ -82,5 +83,7 @@ public class RoomApiController {
         // DTO(User ID, Board ID, Content)를 받아 Reply 테이블에 저장
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
     }
+
+
 
 }
