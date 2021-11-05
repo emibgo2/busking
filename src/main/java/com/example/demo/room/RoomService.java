@@ -54,12 +54,13 @@ public class RoomService {
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(() -> {
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
+        log.info(findRoom.getRoomName());
         System.out.println("music = " + music);
 
         RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger()).orElseGet(() -> {
             return new RMusic();
         });
-        if (reserMusic.getSinger().isEmpty()) {
+        if (reserMusic.getTitle().isEmpty()) {
             RMusic rMusic = music.musicToRMusic(music);
             rMusic.setMusicRoom(findRoom);
             rMusicRepository.save(rMusic);
