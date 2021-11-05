@@ -47,7 +47,7 @@ RoomApiController {
 
     @PostMapping("/{roomName}/{teamName}/music")
     public ResponseDto musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
-        if (roomName.isBlank() || teamName.isBlank()) {
+        if (roomName.isEmpty() || teamName.isEmpty()) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         return roomService.reservationMusic(roomName, teamName, music);
@@ -55,7 +55,7 @@ RoomApiController {
 
     @DeleteMapping("/{roomName}/{teamName}/music")
     public ResponseDto musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
-        if (roomName.isBlank() || teamName.isBlank()) {
+        if (roomName.isEmpty() || teamName.isEmpty()) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         Room findRoom = roomService.reservationListRemove(roomName, teamName, music);
@@ -64,7 +64,7 @@ RoomApiController {
 
     @GetMapping("/{roomName}/{teamName}")
     public ResponseDto findRoom(@PathVariable String roomName, @PathVariable String teamName) {
-        if (roomName.isBlank() || teamName.isBlank()) {
+        if (roomName.isEmpty() || teamName.isEmpty()) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(()->{
