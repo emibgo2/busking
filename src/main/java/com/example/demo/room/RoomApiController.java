@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -44,18 +46,27 @@ RoomApiController {
     }
 
     @PostMapping("/{roomName}/{teamName}/music")
-    public ResponseDto<RoomDto> musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
+    public ResponseDto musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
+        if (roomName.isBlank() || teamName.isBlank()) {
+            return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
+        }
         return roomService.reservationMusic(roomName, teamName, music);
     }
 
     @DeleteMapping("/{roomName}/{teamName}/music")
-    public ResponseDto<RoomDto> musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
+    public ResponseDto musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
+        if (roomName.isBlank() || teamName.isBlank()) {
+            return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
+        }
         Room findRoom = roomService.reservationListRemove(roomName, teamName, music);
         return new ResponseDto<>(HttpStatus.OK.value(), findRoom.roomToRoomDTO());
     }
 
     @GetMapping("/{roomName}/{teamName}")
-    public ResponseDto<RoomDto> findRoom(@PathVariable String roomName, @PathVariable String teamName) {
+    public ResponseDto findRoom(@PathVariable String roomName, @PathVariable String teamName) {
+        if (roomName.isBlank() || teamName.isBlank()) {
+            return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
+        }
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(()->{
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
