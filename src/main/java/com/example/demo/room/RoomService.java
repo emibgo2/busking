@@ -58,9 +58,9 @@ public class RoomService {
         System.out.println("music = " + music);
 
         RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger()).orElseGet(() -> {
-            return new RMusic();
+            return null;
         });
-        if (reserMusic.getTitle().isEmpty()) {
+        if (reserMusic == null) {
             RMusic rMusic = music.musicToRMusic(music);
             rMusic.setMusicRoom(findRoom);
             rMusicRepository.save(rMusic);
