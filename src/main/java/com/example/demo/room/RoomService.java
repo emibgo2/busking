@@ -54,6 +54,7 @@ public class RoomService {
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(() -> {
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
+        System.out.println("music = " + music);
 
         RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger()).orElseGet(() -> {
             return new RMusic();

@@ -20,7 +20,8 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/room")
-public class RoomApiController {
+public class
+RoomApiController {
 
     private final RoomService roomService;
     private final RoomRepository roomRepository;

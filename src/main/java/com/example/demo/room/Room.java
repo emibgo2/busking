@@ -59,7 +59,7 @@ public class Room {
     @JsonIgnoreProperties({"musicRoom"})
     @OrderBy("id asc")
     private List<RMusic> reservationMusic;
-    
+
     public RoomDto roomToRoomDTO() {
         return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, new User().userListToDtoList(this.viewer), this.reservationMusic);
     }
