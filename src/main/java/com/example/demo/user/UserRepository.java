@@ -9,7 +9,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // SELECT * FROM user WHERE loginID = 1?;
     Optional<User> findByUsername(String username);
     Optional<User> deleteUserByUsername(String username);
-
     Optional<User> findByNickname(String nickName);
     Optional<List<User>> findByNicknameContains(String nickName);
     // SELECT * FROM user WHERE loginID = 1?;

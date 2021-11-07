@@ -20,5 +20,5 @@ public class TeamDto {
     private Boolean onAir;
     private String onAirURL;
     private String teamProfileImg;
-
+    private List<UserDto> userList;
 }

@@ -4,6 +4,7 @@ import com.example.demo.ResponseDto;
 import com.example.demo.room.RoomSaveDto;
 import com.example.demo.room.RoomService;
 import com.example.demo.user.User;
+import com.example.demo.user.UserDto;
 import com.example.demo.user.UserService;
 import com.example.demo.user.userDetail.UserDetail;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class TeamApiController {
 //        }
         List<TeamDto> teamDtos = new ArrayList<>();
         for (Team team : all) {
-            teamDtos.add(new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg()));
+            teamDtos.add(teamToDto(team));
         }
 
         if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),teamDtos);
@@ -99,10 +100,17 @@ public class TeamApiController {
 
     public TeamDto teamToDto(Team team) {
         UserDetail userDetail = team.getLeader().getUserDetail();
-        if (userDetail == null) {
-            return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(),team.getTeamProfileImg());
+        List<UserDto> userList = new ArrayList<>();
+        if (team.getUserList() != null) {
+            System.out.println("userlist not null");
+            for (User user : team.getUserList()) {
+                userList.add(new User().userToDto(user));
+            }
         }
-        return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg());
+        if (userDetail == null) {
+            return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(),team.getTeamProfileImg(),userList);
+        }
+        return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg(),userList);
     }
 
     public void roomTestData(TeamSaveForm onAirTeam) {
@@ -116,10 +124,10 @@ public class TeamApiController {
         /**
          *  Team Test Data
          */
-        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다.","https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg"));
-        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다.","https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg"));
-        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다.","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg"));
-        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다.",null));
+        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다.","https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg",null));
+        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다.","https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg",null));
+        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다.","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg",null));
+        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다.",null,null));
 
         for (TeamSaveForm testTeam : TeamList) {
             Team Check = teamRepository.findByTeamName(testTeam.getTeamName()).orElseGet(() -> {
@@ -127,8 +135,9 @@ public class TeamApiController {
             });
             if (Check.getTeamName() == null) {
 
+                testTeam.setLeaderName(testTeam.getLeaderName());
                 teamService.save(testTeam);
-                userService.joinTeam(testTeam.getLeaderName(), testTeam);
+
                 roomTestData(testTeam);
                 log.info("새 팀 생성");
             }

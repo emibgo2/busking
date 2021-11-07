@@ -8,6 +8,9 @@ import java.util.Optional;
 public interface TeamRepository extends JpaRepository<Team,Long> {
     // SELECT * FROM user WHERE loginID = 1?;
     Optional<Team> findByTeamName(String username);
+
+    void deleteByTeamName(String teamName);
+
 //
 //    Optional<User> deleteUserByNickName(String nickname);
 }

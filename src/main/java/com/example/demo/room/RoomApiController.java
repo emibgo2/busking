@@ -4,6 +4,7 @@ package com.example.demo.room;
 import com.example.demo.ResponseDto;
 import com.example.demo.music.Music;
 import com.example.demo.music.MusicRepository;
+import com.example.demo.room.Rmusic.RMusic;
 import com.example.demo.room.chat.ChatSaveRequestDto;
 import com.example.demo.user.User;
 import com.example.demo.user.UserDto;
@@ -46,16 +47,16 @@ RoomApiController {
     }
 
     @PostMapping("/{roomName}/{teamName}/music")
-    public ResponseDto musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
-        if (roomName.isEmpty() || teamName.isEmpty()) {
+    public ResponseDto musicReservation(@PathVariable String roomName, @PathVariable String teamName, @RequestBody RMusic music) {
+        if ((roomName.isEmpty() || roomName =="/")|| (teamName.isEmpty() || teamName =="/")) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         return roomService.reservationMusic(roomName, teamName, music);
     }
 
     @DeleteMapping("/{roomName}/{teamName}/music")
-    public ResponseDto musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody Music music) {
-        if (roomName.isEmpty() || teamName.isEmpty()) {
+    public ResponseDto musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody RMusic music) {
+        if ((roomName.isEmpty() || roomName =="/")|| (teamName.isEmpty() || teamName =="/")) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         Room findRoom = roomService.reservationListRemove(roomName, teamName, music);
@@ -64,7 +65,7 @@ RoomApiController {
 
     @GetMapping("/{roomName}/{teamName}")
     public ResponseDto findRoom(@PathVariable String roomName, @PathVariable String teamName) {
-        if (roomName.isEmpty() || teamName.isEmpty()) {
+        if ((roomName.isEmpty() || roomName =="/")|| (teamName.isEmpty() || teamName =="/")) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
         }
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(()->{

@@ -21,11 +21,13 @@ import java.util.List;
 @Builder
 @Entity
 public class Team {
-    public Team(String teamName, User leader, String introduce, String teamProfileImg) {
+    public Team(String teamName, User leader, String introduce, String teamProfileImg, List<User> userList) {
         this.teamName = teamName;
         this.leader = leader;
         this.introduce = introduce;
         this.teamProfileImg = teamProfileImg;
+        this.userList = userList;
+
     }
 
     @Id
@@ -44,7 +46,7 @@ public class Team {
     @JoinColumn(name = "roomId")
     private Room onAirRoom;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany( fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     // mappedBy가 적혀잇으면 연관관계의 주인이 아니다( FK가 아니다) , DB에 컬럼을 만들지 마세요
     @JsonIgnoreProperties({"team"})
     @OrderBy("id desc")

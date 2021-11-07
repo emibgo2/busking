@@ -50,18 +50,17 @@ public class RoomService {
 
 
     @Transactional
-    public ResponseDto<RoomDto> reservationMusic(String roomName, String teamName, Music music) {
+    public ResponseDto<RoomDto> reservationMusic(String roomName, String teamName, RMusic rMusic) {
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(() -> {
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
         log.info(findRoom.getRoomName());
-        System.out.println("music = " + music);
+        System.out.println("rMusic = " + rMusic);
 
-        RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger()).orElseGet(() -> {
+        RMusic reserMusic = rMusicRepository.findByMusicRoomIdAndTitleAndSinger(findRoom.getId(), rMusic.getTitle(), rMusic.getSinger()).orElseGet(() -> {
             return null;
         });
         if (reserMusic == null) {
-            RMusic rMusic = music.musicToRMusic(music);
             rMusic.setMusicRoom(findRoom);
             rMusicRepository.save(rMusic);
             findRoom.getReservationMusic().add(rMusic);
@@ -73,12 +72,12 @@ public class RoomService {
     }
 
     @Transactional
-    public Room reservationListRemove(String roomName, String teamName, Music music) {
+    public Room reservationListRemove(String roomName, String teamName, RMusic music) {
         Room findRoom = roomRepository.findByRoomNameAndOnAirTeam_TeamName(roomName, teamName).orElseThrow(() -> {
             return new IllegalArgumentException("찾으시는 방은 존재하지 않습니다");
         });
 
-        rMusicRepository.deleteByMusicRoomIdAndTitleAndSinger(findRoom.getId(), music.getTitle(), music.getSinger());
+        rMusicRepository.deleteByMusicRoomIdAndTitleAndSingerAndUserNickname(findRoom.getId(), music.getTitle(), music.getSinger(),music.getUserNickname());
 
         log.info("삭제");
         return findRoom;

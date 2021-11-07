@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface RMusicRepository extends JpaRepository<RMusic,Long> {
     Optional<RMusic> findByMusicRoomIdAndTitleAndSinger(Long roomId,String title, String singer);
-    void deleteByMusicRoomIdAndTitleAndSinger(Long roomId,String title, String singer);
+    void deleteByMusicRoomIdAndTitleAndSingerAndUserNickname(Long roomId,String title, String singer, String userNickname);
     Optional<RMusic> findByTitle(String title);
 
     Optional<List<RMusic>> findByTitleContains(String title);

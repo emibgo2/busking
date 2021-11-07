@@ -42,6 +42,9 @@ public class RMusic {
     @NotBlank(message = "필수값 입니다.")
     private String singer; // 가수
 
+    @NotBlank(message = "필수값 입니다.")
+    private String userNickname;
+
     @Lob
     private String profileImgURL; // 앨범 커버
 

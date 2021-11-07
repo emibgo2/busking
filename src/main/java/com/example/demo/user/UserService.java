@@ -145,6 +145,7 @@ public class UserService {
 
     @Transactional
     public int deleteTestDataAfter() {
+
         List<UserDetail> userDetailList = new ArrayList<>();
 
         // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
@@ -153,17 +154,30 @@ public class UserService {
         userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
         userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
 
-        for (Long i =  userRepository.count(); i > 4; i--) {
-            userRepository.deleteById(i);
+        for (Long i =  userRepository.count(); i > userList.size(); i--) {
+            User user = userRepository.findById(i).orElseThrow(() -> {
+                return new IllegalArgumentException("유저가 없습니다.");
+            });
+            if (user.getTeam() != null) {
+                return 50;
+            }else userRepository.deleteById(i);
             log.info("{} 번 user가 삭제되었습니다.",i);
         }
-        for (Long i = 1L; i <= userList.size(); i++) {
+        for (int i = 0; i < userList.size(); i++) {
+            System.out.println("userSize = " + i);
+
+        }
+        for (Long i = 1L; i < userList.size()-1; i++) {
+            System.out.println("i = " + i);
             User user = userRepository.findById(i).orElseThrow(() -> {
                 return new IllegalArgumentException("User가 없다");
             });
-            user.setNickname(userList.get(i.intValue() -1).getNickname());
-            user.getUserDetail().setProfileImgURL(userDetailList.get(i.intValue()-1).getProfileImgURL());
-            user.getUserDetail().setIntroduce(userDetailList.get(i.intValue()-1).getIntroduce());
+            if (i < 5) {
+                user.setNickname(userList.get(i.intValue() -1).getNickname());
+                user.getUserDetail().setProfileImgURL(userDetailList.get(i.intValue()-1).getProfileImgURL());
+                user.getUserDetail().setIntroduce(userDetailList.get(i.intValue()-1).getIntroduce());
+            }
+
         }
 //        for (Long i = 1L; i <= userList.size(); i++) {
 //            System.out.println("i = " + i);
@@ -216,6 +230,11 @@ public class UserService {
         userList.add(new User("heize@naver.com", "1","헤이즈",1991,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
         userList.add(new User("han@naver.com","1","한서희",1995,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
         userList.add(new User("default@naver.com","1","디폴트사용자",2003,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("ryuyh2000@naver.com","1","유영하",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("gbwlxhd97@naver.com","1","이지원",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("emibgo@naver.com","1","고지훈",1997,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("kdj38245@naver.com","1","김동주",2002,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("5543705@naver.com","1","이채린",2002,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
 
         for (User user : userList) {
             User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {

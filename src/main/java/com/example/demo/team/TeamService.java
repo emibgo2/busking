@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,8 +44,16 @@ public class TeamService {
     @Transactional
     public int deleteTestDataAfter() {
         for (Long i =  teamRepository.count(); i > 4; i--) {
-            teamRepository.deleteById(i);
-            log.info("{} 번 user가 삭제되었습니다.",i);
+
+            Team team = teamRepository.findById(i).orElseThrow(() -> {
+                return new IllegalArgumentException("팀이 없습니다.");
+            });
+            team.getLeader().setTeam(null);
+            for (User user : team.getUserList()) {
+                user.setTeam(null);
+            }
+            teamRepository.delete(team);
+            log.info("{} 번 Team이 삭제되었습니다.",i);
         }
         refreshCount ++;
         refreshTimestamp.put(refreshCount + "번째 refresh", Timestamp.valueOf(LocalDateTime.now()));
@@ -56,8 +66,42 @@ public class TeamService {
         User user = userRepository.findByNickname(team.getLeaderName()).orElseThrow(() -> {
             return new IllegalArgumentException("존재하지 않는 유저입니다.");
         });
-        teamRepository.save(new Team(team.getTeamName(), user, team.getIntroduce(), team.getTeamProfileImg()));
+        List<String> usernameList = team.getUserList();
+        List<User> userSaveList = new ArrayList<>();
+
+        if (usernameList != null) {
+            for (String s : usernameList) {
+                userSaveList.add(userRepository.findByNickname(s).orElseThrow(() -> {
+                    return new IllegalArgumentException("찾으시는 유저가 없습니다.");
+                }));
+            }
+        } else userSaveList = null;
+
+        Team saveTeam = new Team(team.getTeamName(), user, team.getIntroduce(), team.getTeamProfileImg(), userSaveList);
+        teamRepository.save(saveTeam);
+        if (userSaveList != null) {
+            for (User user1 : userSaveList) {
+                user1.setTeam(saveTeam);
+            }
+        }
+        user.setTeam(saveTeam);
+
         log.info("Create Team ={}" ,team);
+    }
+
+    @Transactional
+    public void deleteTeam(TeamSaveForm teamSaveForm) {
+
+        Team team = teamRepository.findByTeamName(teamSaveForm.getTeamName()).orElseThrow(() -> {
+            return new IllegalArgumentException("팀이 없습니다.");
+
+        });
+        team.getLeader().setTeam(null);
+        for (User user : team.getUserList()) {
+            user.setTeam(null);
+        }
+        teamRepository.delete(team);
+        log.info(" {} Team이 삭제되었습니다.", teamSaveForm.getTeamName());
     }
 
     @Transactional
