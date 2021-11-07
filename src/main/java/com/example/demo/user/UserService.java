@@ -155,9 +155,10 @@ public class UserService {
         userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
 
         for (Long i =  userRepository.count(); i > userList.size(); i--) {
-            User user = userRepository.findById(i).orElseThrow(() -> {
-                return new IllegalArgumentException("유저가 없습니다.");
+            User user = userRepository.findById(i).orElseGet(() -> {
+                return new User();
             });
+            if (user.getUsername() == null) continue;
             if (user.getTeam() != null) {
                 return 50;
             }else userRepository.deleteById(i);

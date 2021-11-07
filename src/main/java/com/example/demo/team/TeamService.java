@@ -43,11 +43,13 @@ public class TeamService {
     }
     @Transactional
     public int deleteTestDataAfter() {
+
         for (Long i =  teamRepository.count(); i > 4; i--) {
 
-            Team team = teamRepository.findById(i).orElseThrow(() -> {
-                return new IllegalArgumentException("팀이 없습니다.");
+            Team team = teamRepository.findById(i).orElseGet(() -> {
+                return new Team();
             });
+            if (team.getTeamName()==null) continue;
             team.getLeader().setTeam(null);
             for (User user : team.getUserList()) {
                 user.setTeam(null);

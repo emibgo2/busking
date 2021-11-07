@@ -102,7 +102,6 @@ public class TeamApiController {
         UserDetail userDetail = team.getLeader().getUserDetail();
         List<UserDto> userList = new ArrayList<>();
         if (team.getUserList() != null) {
-            System.out.println("userlist not null");
             for (User user : team.getUserList()) {
                 userList.add(new User().userToDto(user));
             }
