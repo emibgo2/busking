@@ -38,7 +38,7 @@ RoomApiController {
         return roomService.createRoom(room);
     }
 
-    @DeleteMapping
+    @PostMapping("/delete")
     public ResponseDto<Integer> deleteRoom(@RequestBody RoomSaveDto room) {
         // 공지사항을 저장하는 메소드
         roomService.deleteRoom(room);
@@ -54,7 +54,7 @@ RoomApiController {
         return roomService.reservationMusic(roomName, teamName, music);
     }
 
-    @DeleteMapping("/{roomName}/{teamName}/music")
+    @PostMapping("/{roomName}/{teamName}/music/delete")
     public ResponseDto musicRemoveInReservationList(@PathVariable String roomName, @PathVariable String teamName, @RequestBody RMusic music) {
         if ((roomName.isEmpty() || roomName =="/")|| (teamName.isEmpty() || teamName =="/")) {
             return new ResponseDto<String>(HttpStatus.BAD_REQUEST.value(), "roomName or teamName is blank");
