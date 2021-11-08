@@ -44,7 +44,7 @@ public class TeamService {
     @Transactional
     public int deleteTestDataAfter() {
 
-        for (Long i =  teamRepository.count(); i > 4; i--) {
+        for (Long i =  teamRepository.findFirstByOrderByIdDesc().get().getId(); i > 4; i--) {
 
             Team team = teamRepository.findById(i).orElseGet(() -> {
                 return new Team();
@@ -94,7 +94,7 @@ public class TeamService {
     @Transactional
     public void deleteTeam(TeamSaveForm teamSaveForm) {
 
-        Team team = teamRepository.findByTeamName(teamSaveForm.getTeamName()).orElseThrow(() -> {
+        Team team = teamRepository.findByTeamNameAndLeader(teamSaveForm.getTeamName(), teamSaveForm.getLeaderName()).orElseThrow(() -> {
             return new IllegalArgumentException("팀이 없습니다.");
 
         });

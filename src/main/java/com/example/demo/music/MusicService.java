@@ -58,7 +58,7 @@ public class MusicService {
     @Transactional
     public int deleteTestDataAfter() {
 
-        for (Long i =  musicRepository.count(); i > MusicList.size(); i--) {
+        for (Long i =  musicRepository.findFirstByOrderByIdDesc().get().getId(); i > MusicList.size(); i--) {
             musicRepository.deleteById(i);
             log.info("{} 번 user가 삭제되었습니다.",i);
         }
@@ -257,7 +257,7 @@ public class MusicService {
                 "So I don't take the blame~" +
                 "Run away, but we're running in circles~" +
                 "Run away, run away, run away~"));
-        MusicList.add(new Music("이로하", "조정석", "https://image.bugsm.co.kr/album/images/500/203142/20314288.jpg","어두운 불빛아래 촛불 하나~" +
+        MusicList.add(new Music("아로하", "조정석", "https://image.bugsm.co.kr/album/images/500/203142/20314288.jpg","어두운 불빛아래 촛불 하나~" +
                 "와인 잔에 담긴 약속하나~" +
                 "항상 너의 곁에서 널 지켜줄거야~" +
                 "날 믿어준 너였잖아~" +

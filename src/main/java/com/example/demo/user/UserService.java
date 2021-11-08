@@ -154,7 +154,7 @@ public class UserService {
         userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
         userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
 
-        for (Long i =  userRepository.count(); i > userList.size(); i--) {
+        for (Long i =  userRepository.findFirstByOrderByIdDesc().get().getId(); i > userList.size(); i--) {
             User user = userRepository.findById(i).orElseGet(() -> {
                 return new User();
             });

@@ -93,9 +93,16 @@ public class TeamApiController {
         return new ResponseDto<Boolean >(HttpStatus.OK.value(), teamService.onAir(teamName));
     }
 
+    @DeleteMapping
+    public ResponseDto delete(@RequestBody TeamSaveForm team) {
+        teamService.deleteTeam(team);
+        return new ResponseDto<String>(HttpStatus.OK.value(), team.getTeamName() + "이 삭제 되었습니다.");
+    }
+
     @DeleteMapping("/all")
-    public int delete() {
-        return teamService.deleteTestDataAfter();
+    public int deleteAll() {
+        teamService.deleteTestDataAfter();
+        return 200;
     }
 
     public TeamDto teamToDto(Team team) {
