@@ -227,31 +227,31 @@ public class UserService {
 
     @Transactional
     public void testUser() {
-//        userList.add(new User("iu@naver.com", "1", "아이유", 1993, Gender.FEMALE,Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("heize@naver.com", "1","헤이즈",1991,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("han@naver.com","1","한서희",1995,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("default@naver.com","1","디폴트사용자",2003,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("ryuyh2000@naver.com","1","유영하",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("gbwlxhd97@naver.com","1","이지원",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("emibgo@naver.com","1","고지훈",1997,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("kdj38245@naver.com","1","김동주",2002,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
-//        userList.add(new User("5543705@naver.com","1","이채린",2002,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
-//
-//        for (User user : userList) {
-//            User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
-//                return new User();
-//            });
-//            if (user.getUsername()=="iu@naver.com" && Check.getUsername() == null ){
-//
-//                joinMember(user, 2);
-//                log.info("ADMIN 아이디 생성");
-//            }
-//            else if (Check.getUsername() == null) {
-//                joinMember(user, 1);
-//                log.info("User 아이디 생성");
-//            }
-//            else log.info("이미 아이디가 있습니다.");
-//        }
+        userList.add(new User("iu@naver.com", "1", "아이유", 1993, Gender.FEMALE,Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("heize@naver.com", "1","헤이즈",1991,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("han@naver.com","1","한서희",1995,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("default@naver.com","1","디폴트사용자",2003,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("ryuyh2000@naver.com","1","유영하",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("gbwlxhd97@naver.com","1","이지원",2000,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("emibgo@naver.com","1","고지훈",1997,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("kdj38245@naver.com","1","김동주",2002,Gender.MALE, Timestamp.valueOf(LocalDateTime.now())));
+        userList.add(new User("5543705@naver.com","1","이채린",2002,Gender.FEMALE, Timestamp.valueOf(LocalDateTime.now())));
+
+        for (User user : userList) {
+            User Check = userRepository.findByUsername(user.getUsername()).orElseGet(() -> {
+                return new User();
+            });
+            if (user.getUsername()=="iu@naver.com" && Check.getUsername() == null ){
+
+                joinMember(user, 2);
+                log.info("ADMIN 아이디 생성");
+            }
+            else if (Check.getUsername() == null) {
+                joinMember(user, 1);
+                log.info("User 아이디 생성");
+            }
+            else log.info("이미 아이디가 있습니다.");
+        }
     }
     @PostConstruct
     public void init() {
@@ -266,29 +266,29 @@ public class UserService {
 
 }
 
-//@Service
-//@RequiredArgsConstructor
-//class TestDataForUser implements InitializingBean {
-//    private final UserRepository userRepository;
-//    private final UserService userService;
-//
-//
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        System.out.println("afterPropertiesSet");
-//        List<User> userList = userRepository.findAll();
-//        System.out.println(" findAll List");
-//        List<UserDetail> userDetailList = new ArrayList<>();
-//
-//        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
-//        userDetailList.add(new UserDetail(userList.get(0), "https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg", "안녕하세요 아이유 입니다."));
-//        userDetailList.add(new UserDetail(userList.get(1), "https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg", "안녕하세요 헤이즈 입니다."));
-//        userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
-//        userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
-//        int count = 1;
-//        for (UserDetail userDetail : userDetailList) {
-//            userService.detailSave(new UserDetailDto(userList.get(count - 1).getNickname(), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
-//            count++;
-//        }
-//    }
-//}
+@Service
+@RequiredArgsConstructor
+class TestDataForUser implements InitializingBean {
+    private final UserRepository userRepository;
+    private final UserService userService;
+
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("afterPropertiesSet");
+        List<User> userList = userRepository.findAll();
+        System.out.println(" findAll List");
+        List<UserDetail> userDetailList = new ArrayList<>();
+
+        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
+        userDetailList.add(new UserDetail(userList.get(0), "https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg", "안녕하세요 아이유 입니다."));
+        userDetailList.add(new UserDetail(userList.get(1), "https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg", "안녕하세요 헤이즈 입니다."));
+        userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
+        userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
+        int count = 1;
+        for (UserDetail userDetail : userDetailList) {
+            userService.detailSave(new UserDetailDto(userList.get(count - 1).getNickname(), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
+            count++;
+        }
+    }
+}
