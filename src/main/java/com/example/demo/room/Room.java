@@ -23,11 +23,12 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Room(String roomName, Team onAirTeam, String introduce, String teamProfileImg) {
+    public Room(String roomName, Team onAirTeam, String introduce, String teamProfileImg, String latIng) {
         this.roomName = roomName;
         this.onAirTeam = onAirTeam;
         this.introduce = introduce;
         this.teamProfileImg = teamProfileImg;
+        this.latIng = latIng;
     }
 
     @NotBlank(message = "방 이름은 필수 입니다.")
@@ -48,7 +49,7 @@ public class Room {
     @Lob
     private String teamProfileImg;
 
-    @Lob
+
     private String latIng;
 
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -64,7 +65,7 @@ public class Room {
     private List<RMusic> reservationMusic;
 
     public RoomDto roomToRoomDTO() {
-        return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, new User().userListToDtoList(this.viewer), this.reservationMusic, this.latIng);
+        return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, this.latIng, new User().userListToDtoList(this.viewer), this.reservationMusic);
     }
 
 }

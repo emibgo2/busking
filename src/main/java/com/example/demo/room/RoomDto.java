@@ -2,16 +2,14 @@ package com.example.demo.room;
 
 import com.example.demo.room.Rmusic.RMusic;
 import com.example.demo.user.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 public class RoomDto {
     @NotNull(message = "방명은 필수!.")
@@ -23,10 +21,11 @@ public class RoomDto {
 
     @Lob
     private String teamProfileImg;
+
+    private String latIng;
+
     private List<UserDto> viewer;
     private List<RMusic> musics;
 
-    @Lob
-    private String latIng;
 
 }

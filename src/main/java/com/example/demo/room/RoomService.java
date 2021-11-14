@@ -41,7 +41,7 @@ public class RoomService {
         team.setOnAirURL("https://busking-back.herokuapp.com/room/" + room.getRoomName() + "/" + room.getTeamName());
         team.setOnAir(true);
 
-        roomRepository.save(new Room(room.getRoomName(), team, room.getIntroduce(),team.getTeamProfileImg()));
+        roomRepository.save(new Room(room.getRoomName(), team, room.getIntroduce(),team.getTeamProfileImg(), room.getLatIng()));
 
         log.info("Create Room! Room Information: {}",room);
         return new ResponseDto<>(HttpStatus.OK.value(), "https://busking-back.herokuapp.com/room/" + room.getRoomName() + "/" + room.getTeamName());

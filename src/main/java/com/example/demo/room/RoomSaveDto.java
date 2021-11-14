@@ -17,7 +17,6 @@ public class RoomSaveDto {
     private String teamName;
     @Lob
     private String introduce;
-    @Lob
     private String latIng;
 
 }
