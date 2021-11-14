@@ -48,6 +48,9 @@ public class Room {
     @Lob
     private String teamProfileImg;
 
+    @Lob
+    private String latIng;
+
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     // mappedBy가 적혀잇으면 연관관계의 주인이 아니다( FK가 아니다) , DB에 컬럼을 만들지 마세요
     @JsonIgnoreProperties({"chatRoom"})
@@ -61,7 +64,7 @@ public class Room {
     private List<RMusic> reservationMusic;
 
     public RoomDto roomToRoomDTO() {
-        return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, new User().userListToDtoList(this.viewer), this.reservationMusic);
+        return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, new User().userListToDtoList(this.viewer), this.reservationMusic, this.latIng);
     }
 
 }

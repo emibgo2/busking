@@ -5,7 +5,6 @@ import com.example.demo.ResponseDto;
 import com.example.demo.music.Music;
 import com.example.demo.music.MusicRepository;
 import com.example.demo.room.Rmusic.RMusic;
-import com.example.demo.room.chat.ChatSaveRequestDto;
 import com.example.demo.user.User;
 import com.example.demo.user.UserDto;
 import lombok.AllArgsConstructor;
@@ -87,15 +86,15 @@ RoomApiController {
         return new ResponseDto<>(HttpStatus.OK.value(), roomall);
     }
 
-
-    @PostMapping("/{roomId}/reply")
-
-    public ResponseDto<Integer> replySave(@RequestBody ChatSaveRequestDto chatSaveRequestDto) {
-        roomService.writeChat(chatSaveRequestDto);
-
-        // DTO(User ID, Board ID, Content)를 받아 Reply 테이블에 저장
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-    }
+//
+//    @PostMapping("/{roomId}/reply")
+//
+//    public ResponseDto<Integer> replySave(@RequestBody ChatSaveRequestDto chatSaveRequestDto) {
+//        roomService.writeChat(chatSaveRequestDto);
+//
+//        // DTO(User ID, Board ID, Content)를 받아 Reply 테이블에 저장
+//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+//    }
 
 
 

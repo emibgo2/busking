@@ -26,5 +26,7 @@ public class RoomDto {
     private List<UserDto> viewer;
     private List<RMusic> musics;
 
+    @Lob
+    private String latIng;
 
 }
