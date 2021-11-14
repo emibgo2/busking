@@ -29,8 +29,6 @@ public class TeamApiController {
     private final TeamService teamService;
     private final RoomService roomService;
     public List<TeamSaveForm> TeamList = new ArrayList<>();
-
-
     private final UserService userService;
 
     @GetMapping("/all")
@@ -127,29 +125,30 @@ public class TeamApiController {
     @PostConstruct
     public void init() {
 
-        /**
-         *  Team Test Data
-         */
-        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다.","https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg",null));
-        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다.","https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg",null));
-        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다.","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg",null));
-        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다.",null,null));
 
-        for (TeamSaveForm testTeam : TeamList) {
-            Team Check = teamRepository.findByTeamName(testTeam.getTeamName()).orElseGet(() -> {
-                return new Team();
-            });
-            if (Check.getTeamName() == null) {
-
-                testTeam.setLeaderName(testTeam.getLeaderName());
-                teamService.save(testTeam);
-
-                roomTestData(testTeam);
-                log.info("새 팀 생성");
-            }
-            else log.info("이미 팀이 생성 되어 있습니다.");
-        }
-
+//        /**
+//         *  Team Test Data
+//         */
+//        TeamList.add(new TeamSaveForm("1번팀",  "아이유","안녕하세요 1번팀입니다.","https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg",null));
+//        TeamList.add(new TeamSaveForm("2번팀",  "헤이즈","안녕하세요 2번팀입니다.","https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg",null));
+//        TeamList.add(new TeamSaveForm("3번팀",  "한서희","안녕하세요 3번팀입니다.","https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg",null));
+//        TeamList.add(new TeamSaveForm("4번팀", "디폴트사용자", "안녕하세요 4번팀입니다.",null,null));
+//
+//        for (TeamSaveForm testTeam : TeamList) {
+//            Team Check = teamRepository.findByTeamName(testTeam.getTeamName()).orElseGet(() -> {
+//                return new Team();
+//            });
+//            if (Check.getTeamName() == null) {
+//
+//                testTeam.setLeaderName(testTeam.getLeaderName());
+//                teamService.save(testTeam);
+//
+//                roomTestData(testTeam);
+//                log.info("새 팀 생성");
+//            }
+//            else log.info("이미 팀이 생성 되어 있습니다.");
+//        }
+//
 
     }
 
