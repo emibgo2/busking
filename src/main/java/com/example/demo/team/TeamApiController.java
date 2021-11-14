@@ -121,7 +121,7 @@ public class TeamApiController {
 
     public void roomTestData(TeamSaveForm onAirTeam) {
         if  (onAirTeam.getTeamName()=="3번팀") return;
-        roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName()+"의 방",onAirTeam.getTeamName(),"안녕하세요 "+onAirTeam.getTeamName() +"의 방입니다."));
+        roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName()+"의 방",onAirTeam.getTeamName(),"안녕하세요 "+onAirTeam.getTeamName() +"의 방입니다.",null));
 
     }
     @PostConstruct

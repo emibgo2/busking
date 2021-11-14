@@ -4,8 +4,7 @@ import com.example.demo.ResponseDto;
 import com.example.demo.music.Music;
 import com.example.demo.room.Rmusic.RMusic;
 import com.example.demo.room.Rmusic.RMusicRepository;
-import com.example.demo.room.chat.ChatRepository;
-import com.example.demo.room.chat.ChatSaveRequestDto;
+
 import com.example.demo.team.Team;
 import com.example.demo.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class RoomService {
 
-    private final ChatRepository chatRepository;
+//    private final ChatRepository chatRepository;
     private final RoomRepository roomRepository;
     private final TeamRepository teamRepository;
     private final RMusicRepository rMusicRepository;
 
-    @Transactional
-    public void writeChat(ChatSaveRequestDto chatSaveRequestDto
-    ) {
-        chatRepository.mSave(chatSaveRequestDto.getNickname(), chatSaveRequestDto.getRoomId(), chatSaveRequestDto.getContent());
-    }
+//    @Transactional
+//    public void writeChat(ChatSaveRequestDto chatSaveRequestDto
+//    ) {
+//        chatRepository.mSave(chatSaveRequestDto.getNickname(), chatSaveRequestDto.getRoomId(), chatSaveRequestDto.getContent());
+//    }
 
     @Transactional
     public ResponseDto<String> createRoom(RoomSaveDto room) {
