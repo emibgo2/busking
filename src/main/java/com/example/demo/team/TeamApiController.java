@@ -125,15 +125,6 @@ public class TeamApiController {
             System.out.println(1);
             roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName() + "의 방", onAirTeam.getTeamName(), "안녕하세요 " + onAirTeam.getTeamName() + "의 방입니다.", "37.497535461501111, 127.02948149502222"));
         }
-        if (onAirTeam.getTeamName() == "2번팀") {
-            System.out.println(2);
-            roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName() + "의 방", onAirTeam.getTeamName(), "안녕하세요 " + onAirTeam.getTeamName() + "의 방입니다.", "37.497535461503333, 127.02948149504444"));
-        }
-        if  (onAirTeam.getTeamName()=="3번팀") return;
-        if (onAirTeam.getTeamName() == "4번팀") {
-            System.out.println(4);
-            roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName() + "의 방", onAirTeam.getTeamName(), "안녕하세요 " + onAirTeam.getTeamName() + "의 방입니다.", "37.497535461505555, 127.02948149506666"));
-        }
 
     }
     @PostConstruct
