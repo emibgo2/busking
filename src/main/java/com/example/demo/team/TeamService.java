@@ -2,10 +2,12 @@ package com.example.demo.team;
 
 
 import com.example.demo.user.User;
+import com.example.demo.user.UserDto;
 import com.example.demo.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +16,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,6 +31,43 @@ public class TeamService {
     public static Map<String, Timestamp> refreshTimestamp = new ConcurrentHashMap<>();
     public static Map<String, Timestamp> onAirTimestamp  = new ConcurrentHashMap<>();
     public static int onAirCount=0;
+
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<TeamDto>> getAll() {
+        List<Team> all = teamRepository.findAll();
+        if (all.isEmpty()) {
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        
+        List<TeamDto> dtos = all.stream().map(team ->
+                {
+                    User leader = team.getLeader();
+                    List<UserDto> userList = team.getUserList().stream()
+                            .map(user -> new UserDto(
+                                    user.getNickname(), user.getBirthday(), user.getGender(),
+                                    user.userToDto().getUserDetail()))
+                            .collect(Collectors.toList());
+                    return new TeamDto(
+                            team.getTeamName(), new UserDto(leader.getNickname(), leader.getBirthday(), leader.getGender(), leader.userToDto().getUserDetail()), team.getIntroduce(),
+                            team.getNotice(), team.getOnAir(), team.getOnAirURL(),
+                            team.getTeamProfileImg(), userList);
+                }
+        ).collect(Collectors.toList());
+        
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity findByName(String teamName) {
+        Optional<Team> team = teamRepository.findByTeamName(teamName);
+        if (team.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(team);
+
+    }
+    
     @Transactional
     public boolean onAir(String teamName) {
         Team findTeam = teamRepository.findByTeamName(teamName)

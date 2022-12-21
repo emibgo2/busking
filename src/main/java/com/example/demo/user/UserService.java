@@ -7,11 +7,8 @@ import com.example.demo.team.TeamSaveForm;
 import com.example.demo.user.userDetail.UserDetail;
 import com.example.demo.user.userDetail.UserDetailDto;
 import com.example.demo.user.userDetail.UserDetailRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -45,13 +43,20 @@ public class UserService {
         });
 
         if (user.getPassword() == null) {
-
             return true;
             // 해당 아이디 사용가능
         }
         else{
             return false;}
+    }
+    @Transactional(readOnly = true)
+    public User login(String username,String password) {
+        User user = userRepository.findByUsername(username).orElseGet(() -> null);
+        if (user == null ||!encoder.matches(password, user.getPassword())) {
+            return null;
+        }
 
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -200,20 +205,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public User userFindByUsername(String username){
         return userRepository.findByUsername(username)
-                .orElseGet(() -> {
-                    return new User();
-                });
+                .orElseGet(() -> null);
         // 해당 id값에 해당하는 Storage를 Return
     }
 
     @Transactional(readOnly = true)
     public User userFindByNickname(String nickname){
-        User user = userRepository.findByNickname(nickname)
-                .orElseGet(() -> {
-                    return new User();
-                });
-
-        return user;
+        return userRepository.findByNickname(nickname)
+                .orElseGet(() -> null);
         // 해당 id값에 해당하는 Storage를 Return
     }
     @Transactional(readOnly = true)
@@ -225,6 +224,19 @@ public class UserService {
         // 해당 id값에 해당하는 Storage를 Return
     }
 
+    @Transactional(readOnly = true)
+    public List<UserDto> getAllDto() {
+       return userRepository.findAll().stream()
+                .map(
+                        user ->
+                                UserDto.builder()
+                                        .birthday(user.getBirthday())
+                                        .gender(user.getGender())
+                                        .nickname(user.getNickname())
+                                        .userDetail(user.userToDto().getUserDetail())
+                                        .build()
+                ).collect(Collectors.toList());
+    }
     @Transactional
     public void testUser() {
         userList.add(new User("iu@naver.com", "1", "아이유", 1993, Gender.FEMALE,Timestamp.valueOf(LocalDateTime.now())));
@@ -264,31 +276,6 @@ public class UserService {
     }
 
 
+
 }
 
-@Service
-@RequiredArgsConstructor
-class TestDataForUser implements InitializingBean {
-    private final UserRepository userRepository;
-    private final UserService userService;
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println("afterPropertiesSet");
-        List<User> userList = userRepository.findAll();
-        System.out.println(" findAll List");
-        List<UserDetail> userDetailList = new ArrayList<>();
-
-        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
-        userDetailList.add(new UserDetail(userList.get(0), "https://www.theguru.co.kr/data/photos/20210937/art_16316071303022_bf8378.jpg", "안녕하세요 아이유 입니다."));
-        userDetailList.add(new UserDetail(userList.get(1), "https://file.mk.co.kr/meet/neds/2021/02/image_readtop_2021_188127_16142386024553959.jpg", "안녕하세요 헤이즈 입니다."));
-        userDetailList.add(new UserDetail(userList.get(2), "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
-        userDetailList.add(new UserDetail(userList.get(3), null, "안녕하세요"));
-        int count = 1;
-        for (UserDetail userDetail : userDetailList) {
-            userService.detailSave(new UserDetailDto(userList.get(count - 1).getNickname(), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
-            count++;
-        }
-    }
-}

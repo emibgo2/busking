@@ -21,9 +21,7 @@ public class MusicService {
     @Transactional(readOnly = true)
     public Music musicFindByTitle(String title){
         return musicRepository.findByTitle(title)
-                .orElseGet(() -> {
-                    return new Music();
-                });
+                .orElseGet(() -> null);
         // 해당 id값에 해당하는 Storage를 Return
     }
 
@@ -32,7 +30,6 @@ public class MusicService {
         List<Music> music = musicRepository.findByTitleContains(title).orElseGet(() -> {
             return new ArrayList<>();
         });
-
         return music; // 정상
     }
 

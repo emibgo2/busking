@@ -9,11 +9,11 @@ import com.example.demo.user.userDetail.UserDetailRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,102 +30,76 @@ public class UserApiController {
 
 
     @PostMapping("/login")
-    public JwtDto login(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByUsername(user.get("username")).orElseThrow(
-                () -> new IllegalArgumentException("없는 아이디 입니다."));
-        if (!encoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호 입니다.");
-        }
-        String teamName=null;
-        if (member.getTeam() != null) {
-            teamName = member.getTeam().getTeamName();
+    public ResponseEntity<JwtDto> login(@RequestBody Map<String, String> loginDto) {
 
+        String username = loginDto.get("username");
+        String password = loginDto.get("password");
+        if (username == null || password == null) {
+            return new ResponseEntity("아이디 패스워드 모두 입력해야 합니다", HttpStatus.BAD_REQUEST);
         }
 
-        return new JwtDto(jwtTokenProvider.createToken(member.getUsername(), member.getRole()), member.getNickname(),teamName);
+        User user = userService.login(username, password);
+        if (user == null) {
+            return new ResponseEntity("아이디 혹은 패스워드를 다시 확인하십시오", HttpStatus.FORBIDDEN);
+        }
+        return ResponseEntity.ok(new JwtDto(jwtTokenProvider.createToken(user.getNickname(), user.getRole()), user.getNickname(), user.getTeam().getTeamName()));
     }
 
     @GetMapping("/find/{username}")
-    public ResponseDto<UserDto> userInfo(@PathVariable String username) {
-//        List<UserDetail> userDetailList = new ArrayList<>();
-//        User user = userService.userFindByUsername(username);
-//        // 테스트 데이터를 위한 메소드 ( 메모리 낭비 및 비효율 ! )
-//        userDetailList.add(new UserDetail( null, "https://image.genie.co.kr/Y/IMAGE/IMG_ARTIST/067/872/918/67872918_1616652768439_20_600x600.JPG", "안녕하세요 아이유 입니다."));
-//        userDetailList.add(new UserDetail( null, "https://i1.sndcdn.com/artworks-000324021660-jgzmbq-t500x500.jpg", "안녕하세요 헤이즈 입니다."));
-//        userDetailList.add(new UserDetail( null, "https://i.pinimg.com/originals/c0/da/57/c0da57e76bde0ccc9fc503bb3f77d217.jpg", "안녕하세요 한서희 입니다."));
-//        userDetailList.add(new UserDetail(null, null, "안녕하세요"));
-//        int count =1;
-//        for (UserDetail userDetail : userDetailList) {
-//            System.out.println(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
-//            userService.detailSave(new UserDetailDto(new Long (count), userDetail.getProfileImgURL(), userDetail.getIntroduce()));
-//            count++;
-//        }
+    public ResponseEntity<UserDto> userInfo(@PathVariable String username) {
+
 
         User user = userService.userFindByUsername(username);
-
-        UserDto userDto = userToDto(user);
-        if (user.getUsername() == null) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), new UserDto());
-        return new ResponseDto<>(HttpStatus.OK.value(), userDto);
+        if (user == null) {
+            return new ResponseEntity(new UserDto(),HttpStatus.NO_CONTENT );
+        }
+        UserDto userDto = UserDto.builder()
+                .birthday(user.getBirthday())
+                .gender(user.getGender())
+                .nickname(user.getNickname())
+                .userDetail(user.userToDto().getUserDetail())
+                .build();
+        return new ResponseEntity<>(userDto,HttpStatus.OK);
     }
 
     @GetMapping("/{nickname}") // 유저 한명 특정
-    public ResponseDto<UserDto> userFindByNickName(@PathVariable String nickname) {
+    public ResponseEntity<UserDto> userFindByNickName(@PathVariable String nickname) {
         User user = userService.userFindByNickname(nickname);
-        if (user.getUsername() == null) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), new UserDto());
-        UserDto userDto = userToDto(user);
-        return new ResponseDto<>(HttpStatus.OK.value(), userDto);
+        if (user == null) {
+            return ResponseEntity.noContent().build();
+
+        }
+        UserDto userDto = UserDto.builder()
+                .birthday(user.getBirthday())
+                .gender(user.getGender())
+                .nickname(user.getNickname())
+                .userDetail(user.userToDto().getUserDetail())
+                .build();
+        return ResponseEntity.ok(userDto);
     }
 
     @GetMapping("/like/{nickname}") // nickname에 포함된 글자를 토대로 검색
-    public ResponseDto<List> userContainByNickName(@PathVariable String nickname) {
+    public ResponseEntity<List> userContainByNickName(@PathVariable String nickname) {
 
-        List<User> users = userRepository.findByNicknameContains(nickname).orElseGet(() -> {
-            return new ArrayList<>();
-        });
-
-
-        if (users.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), users);
-
-        List<UserDto> userDtos = new ArrayList<>();
-
-        for (User user : users) {
-            userDtos.add(userToDto(user));
-        }
-
-        return new ResponseDto<>(HttpStatus.OK.value(), userDtos);
+        return ResponseEntity.ok(userService.userContainsByNickname(nickname));
     }
 
 
     @GetMapping("/all")
-    public ResponseDto<List> userAllInfo() {
-        List<User> all = userRepository.findAll();
-        for (int i = 0; i < all.size(); i++) {
-            all.get(i).setId(i + 1L);
-        }
-
-        if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), all);
-
-
-        List<UserDto> allUserDto = new ArrayList<>();
-        for (User user : all) {
-            allUserDto.add(userToDto(user));
-        }
-
-        return new ResponseDto<List>(HttpStatus.OK.value(), allUserDto);
+    public List<UserDto> userAllInfo() {
+        return userService.getAllDto();
     }
 
 
     @PostMapping("/id/check")
-    public ResponseDto<Boolean> idCheck(@RequestBody User user) {
-
-        return new ResponseDto<>(HttpStatus.OK.value(), userService.checkMemberId(user));
+    public ResponseEntity<Boolean> idCheck(@RequestBody User user) {
+        return ResponseEntity.ok(userService.checkMemberId(user));
         // 유저 회원가입 메소드
     }
 
     @GetMapping("/{nickname}/check")
-    public ResponseDto<Boolean> nicknameCheck(@PathVariable String nickname ) {
-
-        return new ResponseDto<>(HttpStatus.OK.value(), userService.checkNickname(nickname));
+    public ResponseEntity<Boolean> nicknameCheck(@PathVariable String nickname ) {
+        return ResponseEntity.ok(userService.checkNickname(nickname));
         // 유저 회원가입 메소드
     }
 
@@ -144,43 +118,22 @@ public class UserApiController {
 
     // Role Type 1: User, Role Type 2:ADMIN
     @PostMapping("/admin/joinProc")
-    public ResponseDto<Integer> admin_Save(@RequestBody User user) {
-        return new ResponseDto<Integer>(HttpStatus.OK.value(), userService.joinMember(user, 2));
-
+    public ResponseEntity<Integer> admin_Save(@RequestBody User user) {
+        return ResponseEntity.ok(userService.joinMember(user, 2));
         // 관리자 회원가입 메소드
     }
 
     // UserDetail 부분
 
     @PutMapping("/detail/{oldNickname}")
-    public ResponseDto<UserDetailDto> userDetailSave(@PathVariable String oldNickname, @RequestBody UserDetailDto userDetailDto) {
-        System.out.println("oldNickname = " + oldNickname);
+    public UserDetailDto userDetailSave(@PathVariable String oldNickname, @RequestBody UserDetailDto userDetailDto) {
         userService.detailEdit(oldNickname, userDetailDto);
-        return new ResponseDto<>(HttpStatus.OK.value(), userDetailDto);
-
+        return userDetailDto;
     }
 
-    public UserDto userToDto(User user) {
-        if (user.getUserDetail() != null) {
-            return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
-                    new UserDetailDto(user.getNickname(), user.getUserDetail().getProfileImgURL(), user.getUserDetail().getIntroduce()));
-        }
-        return new UserDto(user.getNickname(), user.getBirthday(), user.getGender(),
-                null);
-    }
 }
 
 
 
-//   기존 로그인 방식
-//    @PostMapping("/api/user/login")
-//    public ResponseDto<Integer> login(@RequestBody User user, HttpSession session) {
-//        System.out.println("UserApiController: login 호출됨");
-//        User principal = userService.login(user);
-//        if (principal != null) {
-//            session.setAttribute("principal",principal);
-//        }
-//        return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-//    }
 
 

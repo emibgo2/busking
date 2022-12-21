@@ -10,6 +10,7 @@ import com.example.demo.user.userDetail.UserDetail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,40 +35,21 @@ public class TeamApiController {
     private final UserService userService;
 
     @GetMapping("/all")
-    public ResponseDto<List> teamAllInfo() {
-        List<Team> all = teamRepository.findAll();
-//        for (int i = 0; i < all.size(); i++) {
-//            all.get(i).setId(i+1L);
-//        }
-        List<TeamDto> teamDtos = new ArrayList<>();
-        for (Team team : all) {
-            teamDtos.add(teamToDto(team));
-        }
-
-        if (all.isEmpty()) return new ResponseDto<>(HttpStatus.NO_CONTENT.value(),teamDtos);
-        else return new ResponseDto<>(HttpStatus.OK.value(), teamDtos);
+    public ResponseEntity<List<TeamDto>> teamAllInfo() {
+        return teamService.getAll();
     }
 
     @GetMapping("/{teamName}")
-    public ResponseDto<TeamDto> teamFindByTeamName(@PathVariable String teamName) {
+    public ResponseEntity<TeamDto> teamFindByTeamName(@PathVariable String teamName) {
 
-        Team findTeam = teamRepository.findByTeamName(teamName)
-                .orElseGet(() -> {
-                    return new Team();
-                });
-
-        if (findTeam.getTeamName() == null) {
-            return new ResponseDto<>(HttpStatus.NO_CONTENT.value(), null);
-        }
-        TeamDto teamDto = teamToDto(findTeam);
-        return new ResponseDto<>(HttpStatus.OK.value(), teamDto);
+        return teamService.findByName(teamName);
     }
 
     @PutMapping("/{teamName}")
-    public ResponseDto<TeamSaveForm> teamEdit(@PathVariable String teamName, @RequestBody TeamSaveForm teamSaveForm) {
+    public ResponseEntity<TeamSaveForm> teamEdit(@PathVariable String teamName, @RequestBody TeamSaveForm teamSaveForm) {
         teamService.edit(teamName,teamSaveForm);
 
-        return new ResponseDto<>(HttpStatus.OK.value(), teamSaveForm);
+        return ResponseEntity.ok(teamSaveForm);
     }
 
 
@@ -82,51 +64,34 @@ public class TeamApiController {
     }
 
     @PostMapping
-    public ResponseDto<TeamSaveForm> save(@Validated @RequestBody TeamSaveForm team) {
+    public ResponseEntity<TeamSaveForm> save(@Validated @RequestBody TeamSaveForm team) {
         teamService.save(team);
-        return new ResponseDto<>(HttpStatus.OK.value(), team);
+        return ResponseEntity.ok(team);
     }
 
     @PostMapping("/onAir")
-    public ResponseDto onAir(@RequestBody Map<String, String> teamNameJson) {
+    public ResponseEntity onAir(@RequestBody Map<String, String> teamNameJson) {
         String teamName = teamNameJson.get("teamName");
-        return new ResponseDto<Boolean >(HttpStatus.OK.value(), teamService.onAir(teamName));
+
+        return ResponseEntity.ok(teamService.onAir(teamName));
     }
 
     @DeleteMapping
-    public ResponseDto delete(@RequestBody TeamSaveForm team) {
+    public void delete(@RequestBody TeamSaveForm team) {
         teamService.deleteTeam(team);
-        return new ResponseDto<String>(HttpStatus.OK.value(), team.getTeamName() + "이 삭제 되었습니다.");
     }
 
     @DeleteMapping("/all")
-    public int deleteAll() {
+    public void deleteAll() {
         teamService.deleteTestDataAfter();
-        return 200;
-    }
-
-    public TeamDto teamToDto(Team team) {
-        UserDetail userDetail = team.getLeader().getUserDetail();
-        List<UserDto> userList = new ArrayList<>();
-        if (team.getUserList() != null) {
-            for (User user : team.getUserList()) {
-                userList.add(new User().userToDto(user));
-            }
-        }
-        if (userDetail == null) {
-            return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(),team.getTeamProfileImg(),userList);
-        }
-        return new TeamDto(team.getTeamName(), new User().userToDto(team.getLeader()), team.getIntroduce(), team.getNotice(), team.getOnAir(), team.getOnAirURL(), team.getTeamProfileImg(),userList);
     }
 
     public void roomTestData(TeamSaveForm onAirTeam) {
-
         if (onAirTeam.getTeamName() == "1번팀") {
-            System.out.println(1);
             roomService.createRoom(new RoomSaveDto(onAirTeam.getTeamName() + "의 방", onAirTeam.getTeamName(), "안녕하세요 " + onAirTeam.getTeamName() + "의 방입니다.", "37.497535461501111, 127.02948149502222"));
         }
-
     }
+
     @PostConstruct
     public void init() {
 

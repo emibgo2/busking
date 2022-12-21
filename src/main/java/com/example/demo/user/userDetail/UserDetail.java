@@ -12,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "user_detail")
 @Entity
 public class UserDetail {
 

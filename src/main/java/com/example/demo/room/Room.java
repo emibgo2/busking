@@ -23,14 +23,6 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Room(String roomName, Team onAirTeam, String introduce, String teamProfileImg, String latIng) {
-        this.roomName = roomName;
-        this.onAirTeam = onAirTeam;
-        this.introduce = introduce;
-        this.teamProfileImg = teamProfileImg;
-        this.latIng = latIng;
-    }
-
     @NotBlank(message = "방 이름은 필수 입니다.")
     @Column(length = 40)
     private String roomName;
@@ -64,6 +56,13 @@ public class Room {
     @OrderBy("id asc")
     private List<RMusic> reservationMusic;
 
+    public Room(String roomName, Team onAirTeam, String introduce, String teamProfileImg, String latIng) {
+        this.roomName = roomName;
+        this.onAirTeam = onAirTeam;
+        this.introduce = introduce;
+        this.teamProfileImg = teamProfileImg;
+        this.latIng = latIng;
+    }
     public RoomDto roomToRoomDTO() {
         return new RoomDto(this.roomName, this.onAirTeam.getTeamName(), this.introduce,this.teamProfileImg, this.latIng, new User().userListToDtoList(this.viewer), this.reservationMusic);
     }
