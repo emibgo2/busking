@@ -42,7 +42,7 @@
 
 서버 : Heroku  
 DB : My SQL  
-Base URL : https://busking-back.herokuapp.com/  
+Base URL : http://busking-env.eba-qxh4macv.ap-northeast-2.elasticbeanstalk.com/  
 로그인 방식: [JWT 토큰](https://webfirewood.tistory.com/115) 
 
 ## User API 명세서
