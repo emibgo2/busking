@@ -1,10 +1,48 @@
 
+# 2021 융소 공모전. 버스킹 웹뷰 & 웹뷰 어플리케이션 프로젝트
 
-# Busking Project
+## 프로젝트 소개
+```
+  1. 거리에서 길거리공연(버스킹)을 하는 사람들은 보통 sns를 통해서 홍보하곤 하는데 
+     sns를 하지 않는 사람도 있기 떄문에 해당 공연을하는 사람의 공연을 놓칠 수 있다.
+     해당 공연을 하는사람들의 위치를 표시해주면 도움이 될것같다.  
+  2. 공연을 하는 사람들은 때론 준비한 곡 이외의 신청곡도 받을 수 있게 끔 노래를 신청하는 기능을 넣어주자.
+  3. 공연을 하는 사람들을 위해 노래가사를 준비해주자.
+```
+## Web Deploy : https://focused-ride-b1185f.netlify.app/
 
-## Project Name: Busking
-###  Spring Frame Work
- 
+## android downUrl : https://expo.dev/artifacts/9661e5ec-78ce-4036-9c94-af73e154957e
+
+## backEnd 저장소
+<a href="https://github.com/emibgo2/busking">링크</a>
+
+## 팀원 소개   
+| `프론트`이지원 | `프론트`유영하 | `프론트`이채린 | `프론트`김동주 | `백엔드`고지훈 |
+|------|------|------|------|------|
+| <img style="width:200px; height:200px" src = "https://github.com/gbwlxhd97.png"> | <img style="width:200px; height:200px" src = "https://github.com/ryuyh2000.png"> | <img style="width:200px; height:200px" src = "https://github.com/Lee-chaerin.png"> | <img style="width:200px; height:200px" src = "https://github.com/kdj38245.png"> | <img style="width:200px; height:200px" src = "https://github.com/emibgo2.png"> |
+| [gbwlxhd97](https://github.com/gbwlxhd97) | [ryuyh2000](https://github.com/ryuyh2000) | [Lee-chaerin](https://github.com/Lee-chaerin) | [kdj38245](https://github.com/kdj38245) | [emibgo2](https://github.com/emibgo2) 
+
+## 기술 스택
+### ***frontend***
+```
+- JavaScript
+- React
+- React Native(WebView)
+- Styled-components
+- Axios
+- Netlify
+```
+
+### ***backend***
+```
+- Spring boot
+- Spring Security
+- JPA
+- MySQL
+- JWT
+- Heroku
+```
+
 서버 : Heroku  
 DB : My SQL  
 Base URL : https://busking-back.herokuapp.com/  
