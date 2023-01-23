@@ -13,9 +13,6 @@
 
 ## android downUrl : https://expo.dev/artifacts/9661e5ec-78ce-4036-9c94-af73e154957e
 
-## backEnd 저장소
-<a href="https://github.com/emibgo2/busking">링크</a>
-
 ## 팀원 소개   
 | `프론트`이지원 | `프론트`유영하 | `프론트`이채린 | `프론트`김동주 | `백엔드`고지훈 |
 |------|------|------|------|------|
